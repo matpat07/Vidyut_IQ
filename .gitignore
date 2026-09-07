@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+/.pnpm-store/
+.pnpm-debug.log*
+
+# Next.js Build Outputs
+.next/
+out/
+build/
+dist/
+
+# Environment Variables & Secrets (MANDATORY SECURITY RULE)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Supabase Local Development & Secrets
+.supabase/
+supabase/.temp/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Diagnostic & Testing
+coverage/
+.nyc_output/
+playwright-report/
+test-results/
+.vitest-cache/
+
+# IDEs, Editors & OS Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Temporary & Cache Directories
+.cache/
+.turbo/
+.eslintcache
+.stylelintcache
+*.tsbuildinfo
+scratch/
+temp/
+tmp/
