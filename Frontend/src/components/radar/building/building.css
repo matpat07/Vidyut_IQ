@@ -1,0 +1,169 @@
+.radar-workspace { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
+.radar-view-switch { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-shrink: 0; }
+.radar-view-switch > p { font-size: 11px; color: var(--muted); }
+.radar-tabs { display: flex; gap: 4px; border: 1px solid rgb(from var(--line) r g b / .3); border-radius: 10px; padding: 3px; }
+.radar-tabs button { font-size: 11px; padding: 8px 14px; border-radius: 7px; color: var(--muted); }
+.radar-tabs button[aria-selected="true"] { background: #CA2127; color: #FFFCFC; }
+.building-viewer { position: relative; display: flex; flex-direction: column; gap: 12px; min-height: 0; flex: 1; }
+.building-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.building-heading h2 { font-size: 25px; font-weight: 400; letter-spacing: -.7px; margin-top: 6px; }
+.building-heading h2 > span { display: block; font-size: 11px; letter-spacing: 0; color: var(--muted); margin-top: 5px; }
+.building-phase { font-size: 10px; color: var(--muted); white-space: nowrap; }
+.building-stage { position: relative; flex: 1; min-height: 360px; border: 0; border-radius: 0; background: var(--canvas); isolation: isolate; }
+.building-stage-label { position: absolute; z-index: 2; left: 24px; top: 22px; pointer-events: none; font-size: 12px; }
+.building-stage-label > span:last-child { display: block; color: var(--muted); font-size: 10px; margin-top: 5px; }
+.building-camera-controls { position: absolute; z-index: 2; left: 50%; bottom: 24px; transform: translateX(-50%); display: flex; align-items: center; gap: 3px; padding: 5px; border: 1px solid rgb(from var(--line) r g b / .3); background: var(--panel); border-radius: 12px; white-space: nowrap; }
+.building-camera-controls button { font-size: 10px; padding: 8px 12px; border-radius: 7px; }
+.building-camera-controls button[aria-pressed="true"] { background: rgb(from var(--line) r g b / .2); }
+.building-camera-controls button:hover { color: #CA2127; }
+.building-camera-controls button:disabled { opacity: .35; }
+.camera-separator { width: 1px; height: 16px; background: rgb(from var(--line) r g b / .3); margin: 0 3px; }
+.building-gesture { position: absolute; bottom: 3px; width: 100%; text-align: center; font-size: 9px; color: var(--muted); pointer-events: none; }
+.building-caption { display: flex; justify-content: space-between; gap: 16px; font-size: 10px; color: var(--muted); }
+.building-caption > span { white-space: nowrap; }
+.plan-room-picker { pointer-events: auto; font-size: 11px; width: 150px; max-width: 40%; border: 1px solid var(--muted); border-radius: 7px; padding: 6px; background: var(--canvas); color: var(--ink); }
+.plan-room-picker:disabled { opacity: .45; }
+.floor-panel-content { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.floor-exits { display: flex; flex-direction: column; flex-shrink: 0; border-top: 1px solid rgb(from var(--line) r g b / .25); padding-top: 6px; }
+.floor-exits button { padding: 7px 0; text-align: left; font-size: 10px; color: var(--muted); }
+.floor-exits button:hover { color: var(--ink); }
+.floor-panel-buttons { flex-shrink: 0; }
+.floor-panel-buttons b { font-weight: 500; }
+.plan-room-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.plan-room-label { position: absolute; left: 0; top: 0; opacity: 0; visibility: hidden; pointer-events: none; padding: 2px 4px; font-size: 10px; line-height: 1.2; background: rgb(from #FFFCFC r g b / .88); color: #161126; border-radius: 3px; white-space: nowrap; }
+.plan-room-label small { display: block; font-size: 7px; }
+.plan-marker { background: none; color: #161126; font-size: 8px; pointer-events: none !important; }
+.plan-room-label:hover, .plan-room-label[aria-pressed="true"] { background: #CA2127; color: #FFFCFC; }
+.plan-room-label:focus-visible { outline: 2px solid #CA2127; outline-offset: 3px; }
+.plan-hover { position: absolute; top: 66px; left: 12px; z-index: 3; max-width: 230px; padding: 9px 12px; background: var(--panel); color: var(--ink); border: 1px solid var(--muted); border-radius: 8px; pointer-events: none; font-size: 11px; }
+.plan-hover span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.plan-room-detail { border-top: 1px solid rgb(from var(--line) r g b / .25); padding-top: 16px; }
+.plan-room-detail dl { margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
+.plan-room-detail dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
+.plan-room-detail dt { font-size: 10px; color: var(--muted); }
+.plan-room-detail dd { font-size: 15px; margin: 0; font-variant-numeric: tabular-nums; }
+.plan-room-detail dd small { font-size: 9px; }
+.plan-alert { font-size: 10px; line-height: 1.5; color: #CA2127; }
+.plan-inspect { margin-top: 10px; font-size: 10px; text-align: left; color: var(--ink); text-decoration: underline; text-underline-offset: 3px; }
+.building-loading { position: absolute; inset: 45% 0 auto; text-align: center; font-size: 12px; pointer-events: none; }
+.building-fallback { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 14px; padding: 24px; text-align: center; font-size: 12px; }
+.building-fallback h3 { font-size: 18px; }
+.building-fallback button { border: 1px solid var(--line); padding: 8px 16px; border-radius: 8px; }
+/* Only RADAR gets a stationary shell; all other screens retain their layouts. */
+.app-shell.is-radar { height: 100dvh; overflow: hidden; }
+.is-radar .app-content { height: 100%; display: flex; flex-direction: column; }
+.is-radar .app-header { flex-shrink: 0; }
+.is-radar .app-content > div:not(.page-content) { flex-shrink: 0; }
+.is-radar .page-content { min-height: 0; width: 100%; flex: 1; display: flex; flex-direction: column; padding-top: 20px; padding-bottom: 20px; }
+.is-radar .page-content > div { min-height: 0; flex: 1; display: flex; flex-direction: column; }
+.is-radar .radar-workspace { flex: 1; }
+.radar-room-list { overflow-y: auto; min-height: 0; padding: 4px 4px 24px; overscroll-behavior: contain; }
+.is-radar footer { display: none; }
+@media (max-width: 680px) {
+  .building-heading h2 { font-size: 21px; }
+  .building-phase, .building-caption > span, .radar-view-switch > p { display: none; }
+  .building-viewer { gap: 12px; }
+  .building-stage { min-height: 230px; }
+  .building-stage-label { top: 15px; left: 16px; font-size: 11px; }
+  .building-camera-controls { bottom: 24px; }
+  .building-camera-controls button { padding: 8px; }
+  .building-gesture { font-size: 8px; padding: 0 10px; }
+  .building-caption { font-size: 9px; }
+  .is-radar .page-content { padding-top: 12px; padding-bottom: 12px; }
+  .building-heading h2 > span { font-size: 10px; }
+}
+@media (max-height: 700px) {
+  .building-heading h2 > span, .building-phase, .building-caption { display: none; }
+  .building-heading h2 { font-size: 20px; }
+  .building-stage { min-height: 180px; }
+  .building-viewer { gap: 8px; }
+}
+/* Scene motion never changes these DOM layout boxes. */
+.building-workbench { display: grid; grid-template-columns: minmax(0, 1fr) 148px; gap: 18px; flex: 1; min-height: 0; }
+.building-scene-surface { position: absolute; inset: 0; touch-action: none; overscroll-behavior: contain; outline-offset: -3px; }
+.building-floor-labels { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.building-floor-label { position: absolute; top: 0; left: 0; font-size: 10px; color: var(--ink); opacity: 0; white-space: nowrap; display: flex; align-items: center; gap: 6px; margin-top: -5px; text-shadow: 0 1px 3px var(--canvas); }
+.building-floor-label > span { display: block; width: 17px; height: 1px; background: var(--muted); }
+.building-floor-panel { display: flex; flex-direction: column; min-height: 0; padding: 12px 0; gap: 16px; color: var(--ink); }
+.floor-panel-heading { display: flex; align-items: center; justify-content: space-between; }
+.floor-panel-heading button { font-size: 10px; color: var(--muted); padding: 4px 8px; border-radius: 5px; }
+.floor-panel-heading button[aria-pressed="true"] { background: rgb(from var(--line) r g b / .15); }
+.floor-panel-buttons { display: flex; flex-direction: column; gap: 5px; }
+.floor-panel-buttons button { display: flex; align-items: center; justify-content: space-between; border: 1px solid rgb(from var(--line) r g b / .25); border-radius: 9px; padding: 11px 12px; font-size: 11px; }
+.floor-panel-buttons button > span:last-child { color: var(--muted); }
+.floor-panel-buttons button:hover { border-color: var(--muted); }
+.floor-panel-buttons button[aria-pressed="true"] { background: #CA2127; color: #FFFCFC; border-color: #CA2127; }
+.floor-panel-buttons button[aria-pressed="true"] > span:last-child { color: #FFFCFC; }
+.floor-energy-summary { border-top: 1px solid rgb(from var(--line) r g b / .25); padding-top: 16px; }
+.floor-energy-source { font-size: 9px; color: var(--muted); margin-top: 4px; }
+.floor-energy-summary dl { display: flex; flex-direction: column; gap: 12px; margin: 14px 0 0; }
+.floor-energy-summary dl > div { display: flex; align-items: baseline; justify-content: space-between; gap: 6px; }
+.floor-energy-summary dt { color: var(--muted); font-size: 10px; }
+.floor-energy-summary dd { font-size: 17px; font-variant-numeric: tabular-nums; margin: 0; }
+.floor-energy-summary dd small { font-size: 9px; }
+.floor-data-unavailable { font-size: 11px; color: var(--muted); line-height: 1.6; margin-top: 14px; }
+.back-to-building { margin-top: auto; border-top: 1px solid rgb(from var(--line) r g b / .25); padding: 12px 0; font-size: 10px; text-align: left; color: var(--muted); }
+.building-scrub { display: flex; align-items: center; gap: 12px; flex-shrink: 0; font-size: 10px; color: var(--muted); padding: 0 4px; min-height: 24px; }
+.building-scrub button { padding: 6px 0; }
+.building-scrub button:hover { color: var(--ink); }
+.building-scrub label { font-size: 9px; }
+.building-scrub input { min-width: 30px; flex: 1; width: auto; }
+.building-scrub output { min-width: 30px; text-align: right; font-variant-numeric: tabular-nums; }
+@media (min-width: 681px) {
+  .building-heading { position: absolute; top: 0; left: 0; right: 166px; z-index: 2; pointer-events: none; }
+  .building-heading h2 > span { display: none; }
+  .building-phase, .building-stage-label { display: none; }
+  .building-stage { grid-column: 1 / -1; grid-row: 1; }
+  .building-floor-panel { grid-column: 2; grid-row: 1; z-index: 2; overflow: hidden; background: var(--canvas); }
+  .building-camera-controls { left: calc((100% - 186px) / 2); }
+  .building-gesture { width: max-content; max-width: calc(100% - 186px); left: calc((100% - 186px) / 2); transform: translateX(-50%); background: var(--canvas); padding: 2px 6px; }
+}
+@media (min-width: 681px) and (max-height: 900px) {
+  .building-floor-panel { gap: 8px; padding: 6px 0; }
+  .floor-panel-buttons button { padding: 6px 12px; }
+  .floor-energy-summary { padding-top: 10px; }
+  .floor-energy-summary dl { gap: 6px; margin-top: 10px; }
+  .floor-energy-summary dd { font-size: 14px; }
+  .back-to-building { padding: 6px 0; }
+}
+@media (max-width: 680px) {
+  .building-workbench { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr); gap: 8px; }
+  .building-floor-panel { grid-row: 1; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 6px; padding: 0 2px; }
+  .floor-panel-heading { display: none; }
+  .floor-panel-buttons { grid-column: 1 / -1; flex-direction: row; gap: 5px; }
+  .floor-panel-buttons button { padding: 7px 5px; font-size: 10px; flex: 1; justify-content: center; }
+  .floor-panel-buttons button > span:last-child { display: none; }
+  .floor-panel-content { grid-column: 1 / -1; height: 64px; max-height: 64px; }
+  .floor-exits { grid-column: 1 / -1; flex-direction: row; justify-content: space-between; border: 0; padding: 0; gap: 8px; }
+  .floor-exits button { padding: 3px 0; font-size: 9px; }
+  .plan-room-label { font-size: 9px; padding: 1px 2px; }
+  .plan-room-label small { display: none; }
+  .plan-room-label[data-numbered="false"]:not([aria-pressed="true"]), .plan-marker, .is-focused .building-stage-label { display: none; }
+  .plan-hover { top: 0; left: 0; font-size: 10px; max-width: 170px; padding: 5px 8px; }
+  .plan-room-detail { padding: 0; border: 0; }
+  .plan-room-detail dl { flex-direction: row; margin: 4px 0; gap: 12px; }
+  .plan-room-detail dl > div { gap: 4px; }
+  .plan-room-detail dd { font-size: 12px; }
+  .plan-room-detail > .eyebrow, .plan-room-detail > .floor-energy-source { display: inline; margin-right: 8px; font-size: 9px; }
+  .plan-room-detail .floor-data-unavailable { margin: 4px 0; }
+  .plan-room-picker { width: 125px; font-size: 9px; }
+  .building-heading { min-height: 50px; }
+  .building-heading h2 { font-size: 18px; }
+  .building-caption { display: none; }
+  .floor-energy-summary { border: 0; padding: 0; }
+  .floor-energy-summary > p { display: none; }
+  .floor-energy-summary dl { flex-direction: row; gap: 12px; margin: 0; }
+  .floor-energy-summary dl > div { gap: 4px; }
+  .floor-energy-summary dt { font-size: 8px; }
+  .floor-energy-summary dd { font-size: 12px; }
+  .floor-energy-summary dd small { font-size: 8px; }
+  .floor-data-unavailable { display: block !important; font-size: 9px; margin: 0; }
+  .back-to-building { margin: 0; padding: 3px 0; border: 0; font-size: 8px; }
+  .building-stage { min-height: 180px; }
+  .building-heading h2 > span { display: none; }
+  .building-scrub { gap: 8px; font-size: 9px; }
+  .building-scrub label { display: none; }
+  .building-caption { font-size: 8px; }
+  .building-floor-label { font-size: 8px; }
+  .building-floor-label > span { width: 10px; }
+}
