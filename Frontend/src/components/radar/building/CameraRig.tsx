@@ -12,7 +12,7 @@ const DIRECTIONS: Record<CameraView,[number,number,number]>={perspective:[.78,.4
 const EXPLODED_DIRECTIONS={perspective:[-.12,.42,1],aerial:[-.15,.6,1]} as const;
 const FLOOR_DIRECTIONS:Record<CameraView,[number,number,number]>={perspective:[.025,1,.3],front:[0,1,.36],aerial:[-.025,1,.28],top:[0,1,.001]};
 const RAIL_INSET=266;
-export function CameraRig({ command, controller, focus, reduced, transitions,selectedRoom }: { command: ViewCommand; controller: ExplosionController; focus: FloorFocus; reduced: MutableRefObject<boolean>;transitions:TransitionController;selectedRoom:string|null }) {
+export function CameraRig({ command, controller, focus, reduced, transitions,selectedRoom,layout='radar' }: { command: ViewCommand; controller: ExplosionController; focus: FloorFocus; reduced: MutableRefObject<boolean>;transitions:TransitionController;selectedRoom:string|null;layout?:'radar'|'presentation' }) {
   const { camera: baseCamera, gl, size, invalidate } = useThree();
   const camera = baseCamera as OrthographicCamera;
   const controls = useRef<OrbitControls | null>(null);
@@ -34,6 +34,7 @@ export function CameraRig({ command, controller, focus, reduced, transitions,sel
     const orbit = new OrbitControls(camera, gl.domElement); controls.current = orbit;
     orbit.enablePan = false; orbit.enableZoom = false; orbit.enableDamping = false;
     orbit.minPolarAngle = .001; orbit.maxPolarAngle = Math.PI / 2;
+    if(layout==='presentation'){orbit.minAzimuthAngle=-.2;orbit.maxAzimuthAngle=1.1;gl.domElement.style.touchAction='pan-y';}
     // One finger separates floors; two fingers orbit. Mouse drag still orbits.
     orbit.touches.ONE = undefined; orbit.touches.TWO = TOUCH.DOLLY_ROTATE;
     orbit.target.copy(target);
@@ -55,10 +56,10 @@ export function CameraRig({ command, controller, focus, reduced, transitions,sel
       unsubscribe();gl.domElement.removeEventListener('pointerdown',guard,true);
       orbit.dispose(); controls.current = null;
     };
-  }, [camera, controller, gl, invalidate, target,transitions]);
+  }, [camera, controller, gl, invalidate, target,transitions,layout]);
   useLayoutEffect(() => {
     // The borderless canvas fills the workbench; leave the fixed floor rail clear.
-    state.current.rail = matchMedia('(min-width: 681px)').matches;
+    state.current.rail = layout==='radar'&&matchMedia('(min-width: 681px)').matches;
     const rightInset = state.current.rail ? RAIL_INSET : 48;
     camera.setViewOffset(size.width, size.height, (rightInset - 12) / 2, 24, size.width, size.height);
     const previous = previousCommand.current;
@@ -72,7 +73,7 @@ export function CameraRig({ command, controller, focus, reduced, transitions,sel
     intent.current.zoomOverride = preserve && previous.zoom !== command.zoom ? (state.current.active ? state.current.zoom : camera.zoom) * command.zoom / previous.zoom : null;
     previousCommand.current = command;
     state.current.dirty = true;transitions.cameraStarted(); invalidate();
-  }, [command, size.width, size.height, camera, controller, invalidate, target,selectedRoom,transitions]);
+  }, [command, size.width, size.height, camera, controller, invalidate, target,selectedRoom,transitions,layout]);
   useFrame((_, delta) => {
     const motion = state.current;
     if(transitions.orbiting)return;

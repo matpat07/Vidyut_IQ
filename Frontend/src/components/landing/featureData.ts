@@ -1,0 +1,11 @@
+import type {NavView} from '../layout/Sidebar';
+import type {LandingIconName} from './icons/LandingIcon';
+export const FEATURES:{title:string;tag:string;description:string;detail:string;image:string;view:NavView;icon:LandingIconName}[]=[
+ {title:'A campus-wide perspective.',tag:'SMART ENERGY DASHBOARD',description:'See consumption, room activity and estimated savings together.',detail:'Move from an overview to the rooms and alerts that explain it.',image:'dashboard',view:'DASHBOARD',icon:'gauge'},
+ {title:'Architecture becomes insight.',tag:'CAMPUS RADAR',description:'Explore Building No. 6, separate five floors and inspect individual rooms.',detail:'A working spatial interface, connected to the project’s supported simulation data.',image:'radar',view:'RADAR',icon:'cube'},
+ {title:'Find the load that needs context.',tag:'INTELLIGENT WASTE DETECTION',description:'Compare modeled appliance use with expected occupancy and timetable conditions.',detail:'Rule-backed explanations distinguish an anomaly from high consumption alone.',image:'alerts',view:'ALERTS',icon:'scan'},
+ {title:'Explore the effect of switching off.',tag:'ECO-OFF SIMULATION',description:'Simulate appliance shutdown and inspect estimated reductions.',detail:'A software simulation. No deployed physical electrical control is implied.',image:'ecooff',view:'RADAR',icon:'power'},
+ {title:'Make the impact understandable.',tag:'ENERGY ANALYTICS',description:'Compare consumption and inspect estimated financial and environmental impact.',detail:'Assumptions stay visible, so illustrative projections remain clearly identified.',image:'analytics',view:'ANALYTICS',icon:'chart-line-up'},
+ {title:'Bring the timetable into the picture.',tag:'TIMETABLE-AWARE OPERATIONS',description:'Explore faculty lecture cancellation and the student room finder.',detail:'Expected occupancy helps explain when a powered room may need attention.',image:'operations',view:'TEACHER',icon:'calendar-blank'},
+ {title:'Every action leaves a trace.',tag:'AUDIT & ACTION TRACKING',description:'Review simulated remediation events and the savings recorded with them.',detail:'An operational history that makes the next conversation more informed.',image:'audit',view:'AUDIT',icon:'clock-counter-clockwise'},
+];

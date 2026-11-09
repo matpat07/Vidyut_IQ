@@ -1,0 +1,28 @@
+{
+  "checks": [
+    "Production direct Campus Radar URL and WebGL initialization",
+    "Production Campus Radar refresh",
+    "Production dashboard/home navigation"
+  ],
+  "errors": [],
+  "hero": {
+    "h1": [
+      {
+        "text": "Every watthas a story.",
+        "rect": {
+          "x": 35,
+          "y": 207,
+          "width": 620,
+          "height": 150.9375,
+          "top": 207,
+          "right": 655,
+          "bottom": 357.9375,
+          "left": 35
+        }
+      }
+    ],
+    "canvases": 0,
+    "overflow": false
+  },
+  "completedAt": "2026-11-09T12:21:56.539Z"
+}

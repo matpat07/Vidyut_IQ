@@ -18,7 +18,7 @@ interface SceneProps extends RoomInteraction {
   onFallback: () => void;
 }
 
-function TransitionClock({ transitions, reduced }: { transitions:TransitionController; reduced: MutableRefObject<boolean> }) {
+export function TransitionClock({ transitions, reduced }: { transitions:TransitionController; reduced: MutableRefObject<boolean> }) {
   const { invalidate,gl } = useThree();
   const resting = useRef(true), waking = useRef(true);
   useEffect(() => {

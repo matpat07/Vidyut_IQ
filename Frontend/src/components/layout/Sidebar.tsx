@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSimulation } from '../../context/SimulationContext';
+import {navigatePath} from '../../navigation';
 export type NavView = 'DASHBOARD' | 'RADAR' | 'ANALYTICS' | 'ALERTS' | 'AUDIT' | 'SETTINGS' | 'TEACHER' | 'STUDENT_FINDER';
 interface SidebarProps {
     currentView: NavView;
@@ -22,7 +23,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onSelectView, isO
     return <>
  {isOpenMobile && <button className="sidebar-backdrop" aria-label="Close navigation" onClick={onCloseMobile}/>}
  <aside id="primary-navigation" className={`sidebar ${isOpenMobile ? 'is-open' : ''}`}>
- <div className="brand">Vidyut<span>IQ</span><p>Campus energy intelligence</p></div>
+ <a className="brand text-ink no-underline" href="/" aria-label="VidyutIQ home" onClick={event=>{if(!event.ctrlKey&&!event.metaKey&&!event.shiftKey&&!event.altKey&&event.button===0){event.preventDefault();navigatePath('/');}}}>Vidyut<span>IQ</span><p>Campus energy intelligence</p></a>
  <button className="mobile-close" onClick={onCloseMobile}>Close menu</button>
  <nav aria-label="Main navigation">{groups.map(group => <div className="nav-group" key={group.label}><p className="eyebrow">{group.label}</p>
  {group.items.map(([id, label]) => <button key={id} aria-current={currentView === id ? 'page' : undefined} onClick={() => { onSelectView(id); onCloseMobile(); }}><span>{label}</span>{id === 'ALERTS' && activeAlerts.length > 0 ? <small>{activeAlerts.length}</small> : currentView === id ? <span aria-hidden="true">↗</span> : null}</button>)}</div>)}</nav>

@@ -1,0 +1,61 @@
+{
+  "createdAt": "2026-11-09T11:18:30.427Z",
+  "source": "Actual VidyutIQ model and simulated workspace",
+  "files": [
+    {
+      "file": "building-exterior.png",
+      "route": "scripts/landing-scene-capture.html?pose=exterior"
+    },
+    {
+      "file": "building-half.png",
+      "route": "scripts/landing-scene-capture.html?pose=half"
+    },
+    {
+      "file": "building-exploded.png",
+      "route": "scripts/landing-scene-capture.html?pose=exploded"
+    },
+    {
+      "file": "building-floor.png",
+      "route": "scripts/landing-scene-capture.html?pose=floor"
+    },
+    {
+      "file": "building-room.png",
+      "route": "scripts/landing-scene-capture.html?pose=room"
+    },
+    {
+      "file": "dashboard.png",
+      "route": "/app/dashboard",
+      "data": "Simulation"
+    },
+    {
+      "file": "radar.png",
+      "route": "/app/radar",
+      "data": "Simulation"
+    },
+    {
+      "file": "alerts.png",
+      "route": "/app/alerts",
+      "data": "Simulation"
+    },
+    {
+      "file": "analytics.png",
+      "route": "/app/analytics",
+      "data": "Simulation"
+    },
+    {
+      "file": "operations.png",
+      "route": "/app/faculty",
+      "data": "Simulation"
+    },
+    {
+      "file": "audit.png",
+      "route": "/app/audit",
+      "data": "Simulation"
+    },
+    {
+      "file": "ecooff.png",
+      "route": "/app/dashboard → Room 6103 → Actions",
+      "data": "Simulation"
+    }
+  ]
+}

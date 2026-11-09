@@ -51,7 +51,7 @@ try {
   };
   const capture=async name=>{await page.screenshot({path:resolve(output,`${name}.png`),fullPage:true});report.screenshots.push(`${name}.png`);};
   const boxes=()=>page.evaluate(()=>Object.fromEntries(['.app-header','.sidebar','.building-heading','.radar-analytics','.floor-panel-buttons','.floor-exits','.building-stage'].map(selector=>[selector,document.querySelector(selector).getBoundingClientRect().toJSON()])));
-  await page.goto(`http://127.0.0.1:${port}/`,{waitUntil:'networkidle0'});
+  await page.goto(`http://127.0.0.1:${port}/app/dashboard`,{waitUntil:'networkidle0'});
   const originalKpis=await page.$$eval('.kpi-card',elements=>elements.map(element=>element.textContent));
   await click('Campus Radar');await page.waitForSelector('canvas');await settled();
   const fiberURL=requests.find(url=>url.includes('/node_modules/.vite/deps/@react-three_fiber.js'));
