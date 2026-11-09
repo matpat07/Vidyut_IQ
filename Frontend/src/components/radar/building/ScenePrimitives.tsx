@@ -3,7 +3,7 @@ import type {} from '@react-three/fiber';
 import { InstancedMesh, Object3D } from 'three';
 import { BoxPart, MATERIALS, MaterialName } from './architecture';
 
-export type ExplosionRole = 'slab' | 'base' | 'shell' | 'core' | 'accessory' | 'roof' | 'highlight' | 'partition' | 'site' | 'service';
+export type ExplosionRole = 'slab' | 'base' | 'shell' | 'core' | 'accessory' | 'roof' | 'highlight' | 'partition' | 'site' | 'service' | 'analytical';
 function BoxBatch({ parts, material, role }: { parts: BoxPart[]; material: MaterialName; role?: ExplosionRole }) {
   const ref = useRef<InstancedMesh>(null);
   useLayoutEffect(() => {

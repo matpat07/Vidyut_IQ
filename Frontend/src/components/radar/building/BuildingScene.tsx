@@ -1,37 +1,30 @@
-﻿import React, { MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
+import React, { MutableRefObject, useEffect, useLayoutEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { OrthographicCamera, Vector3, PCFSoftShadowMap, TOUCH } from 'three';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { Vector3, PCFSoftShadowMap } from 'three';
 import { BuildingModel } from './BuildingModel';
 import { MODEL_SCALE } from './architecture';
 import { ExplosionController, explosionPose } from './explosion';
-import { FloorFocus, focusedFloorY } from './floorFocus';
+import { FloorFocus } from './floorFocus';
 import { RoomInteraction, RoomLabels } from './FloorRooms';
+import {CameraRig} from './CameraRig';
+import type {ViewCommand,TransitionController} from './transitionController';
 
-export type CameraView = 'perspective' | 'front' | 'aerial' | 'top';
-export interface ViewCommand { view: CameraView; zoom: number; revision: number }
 interface SceneProps extends RoomInteraction {
   command: ViewCommand; controller: ExplosionController; selectedFloor: number | null;
   labels: MutableRefObject<(HTMLDivElement | null)[]>;
   focus: FloorFocus; roomLabels: MutableRefObject<(HTMLElement | null)[]>;
+  hoverCard: MutableRefObject<HTMLDivElement | null>;
   onReady: () => void; onContextLost: () => void;
+  onFallback: () => void;
 }
-const DIRECTIONS: Record<CameraView, [number, number, number]> = {
-  perspective: [.78, .48, 1], front: [0, 0, 1], aerial: [-.45, 1.25, 1.25], top: [0, 1, .001],
-};
-const EXPLODED_DIRECTIONS = { perspective: [-.12, .42, 1], aerial: [-.15, .6, 1] } as const;
-const FLOOR_DIRECTIONS: Record<CameraView, [number, number, number]> = {
-  perspective: [.025, 1, .3], front: [0, 1, .36], aerial: [-.025, 1, .28], top: [0, 1, .001],
-};
 
-function ExplosionClock({ controller, focus, reduced }: { controller: ExplosionController; focus: FloorFocus; reduced: MutableRefObject<boolean> }) {
-  const { invalidate } = useThree();
+function TransitionClock({ transitions, reduced }: { transitions:TransitionController; reduced: MutableRefObject<boolean> }) {
+  const { invalidate,gl } = useThree();
   const resting = useRef(true), waking = useRef(true);
   useEffect(() => {
     const wake = () => { if (resting.current) waking.current = true; invalidate(); };
-    const offExplosion = controller.subscribe(wake), offFocus = focus.subscribe(wake);
-    return () => { offExplosion(); offFocus(); };
-  }, [controller, focus, invalidate]);
+    return transitions.subscribe(wake);
+  }, [transitions, invalidate]);
   useEffect(() => {
     const media = matchMedia('(prefers-reduced-motion: reduce)');
     const update = () => { reduced.current = media.matches; invalidate(); };
@@ -42,148 +35,10 @@ function ExplosionClock({ controller, focus, reduced }: { controller: ExplosionC
     // A demand-rendered scene can sleep for minutes. Its first delta must not
     // count that idle time as animation time and jump through the camera dive.
     const elapsed = waking.current ? 1 / 60 : delta; waking.current = false;
-    const opening = controller.advance(elapsed, reduced.current);
-    const diving = focus.advance(elapsed, controller.current, reduced.current);
-    resting.current = !opening && !diving;
-    if (opening || diving) invalidate();
+    const moving = transitions.advance(elapsed, reduced.current);
+    resting.current = !moving;
+    if (moving) { gl.shadowMap.needsUpdate=true; invalidate(); }
   }, -2);
-  return null;
-}
-
-function CameraRig({ command, controller, focus, reduced }: { command: ViewCommand; controller: ExplosionController; focus: FloorFocus; reduced: MutableRefObject<boolean> }) {
-  const { camera: baseCamera, gl, size, invalidate } = useThree();
-  const camera = baseCamera as OrthographicCamera;
-  const controls = useRef<OrbitControls | null>(null);
-  const target = useMemo(() => new Vector3(0, 6.2, 5), []);
-  const floorTarget = useMemo(() => new Vector3(), []);
-  const lookTarget = useMemo(() => new Vector3(0, 6.2, 5), []);
-  const retreat = useMemo(() => ({ active: false, amount: 1, position: new Vector3(), target: new Vector3(), zoom: 1 }), []);
-  const destination = useMemo(() => new Vector3(), []);
-  const direction = useMemo(() => new Vector3(), []);
-  const right = useMemo(() => new Vector3(), []);
-  const up = useMemo(() => new Vector3(), []);
-  const corner = useMemo(() => new Vector3(), []);
-  const worldUp = useMemo(() => new Vector3(0, 1, 0), []);
-  const intent = useRef({ direction: new Vector3(...DIRECTIONS.perspective).normalize(), lift: 0, preset: true, zoomOverride: null as number | null });
-  const state = useRef({ dirty: true, active: true, progress: -1, zoom: 1, rail: false, amount: -1, level: -1 });
-  const previousCommand = useRef<ViewCommand | null>(null);
-  useEffect(() => {
-    const orbit = new OrbitControls(camera, gl.domElement); controls.current = orbit;
-    orbit.enablePan = false; orbit.enableZoom = false; orbit.enableDamping = false;
-    orbit.minPolarAngle = .001; orbit.maxPolarAngle = Math.PI / 2;
-    // One finger separates floors; two fingers orbit. Mouse drag still orbits.
-    orbit.touches.ONE = undefined; orbit.touches.TWO = TOUCH.DOLLY_ROTATE;
-    orbit.target.copy(target);
-    const interrupt = () => { state.current.active = false; };
-    const capture = () => {
-      intent.current.direction.copy(camera.position).sub(target).normalize();
-      intent.current.lift = explosionPose(controller.current).cameraLift;
-      intent.current.preset = false;
-    };
-    const redraw = () => invalidate();
-    orbit.addEventListener('change', redraw); orbit.addEventListener('start', interrupt); orbit.addEventListener('end', capture);
-    return () => {
-      orbit.removeEventListener('change', redraw); orbit.removeEventListener('start', interrupt); orbit.removeEventListener('end', capture);
-      orbit.dispose(); controls.current = null;
-    };
-  }, [camera, controller, gl, invalidate, target]);
-  useLayoutEffect(() => {
-    // The borderless canvas fills the workbench; leave the fixed floor rail clear.
-    state.current.rail = matchMedia('(min-width: 681px)').matches;
-    const rightInset = state.current.rail ? 198 : 48;
-    camera.setViewOffset(size.width, size.height, (rightInset - 12) / 2, 24, size.width, size.height);
-    const previous = previousCommand.current;
-    const preserve = previous?.view === command.view && previous.revision === command.revision;
-    if (preserve) {
-      intent.current.direction.copy(camera.position).sub(target).normalize();
-      intent.current.lift = explosionPose(controller.current).cameraLift;
-    } else {
-      intent.current.direction.set(...DIRECTIONS[command.view]).normalize(); intent.current.lift = 0; intent.current.preset = true;
-    }
-    intent.current.zoomOverride = preserve && previous.zoom !== command.zoom ? (state.current.active ? state.current.zoom : camera.zoom) * command.zoom / previous.zoom : null;
-    previousCommand.current = command;
-    state.current.dirty = true; invalidate();
-  }, [command, size.width, size.height, camera, controller, invalidate, target]);
-  useFrame((_, delta) => {
-    const motion = state.current;
-    if (focus.returning && !retreat.active) {
-      retreat.active = true; retreat.amount = Math.max(.0005, focus.amount);
-      retreat.position.copy(camera.position); retreat.target.copy(lookTarget); retreat.zoom = camera.zoom;
-    } else if (!focus.returning) retreat.active = false;
-    const progressChanged = motion.progress !== controller.current;
-    const focusChanged = motion.amount !== focus.amount || motion.level !== focus.level;
-    if (progressChanged || focusChanged || motion.dirty) {
-      const pose = explosionPose(controller.current);
-      const focusAmount = focus.returning ? 0 : focus.amount;
-      camera.setViewOffset(size.width, size.height, ((motion.rail ? 198 : 48) - 12) / 2, 24 * (1 - (motion.rail ? focus.amount : 0)), size.width, size.height);
-      if (progressChanged) intent.current.zoomOverride = null;
-      target.set(0, (6.2 + (pose.roofY / 2 - 6.2) * pose.cameraSpread) * MODEL_SCALE[1], (5 - pose.cameraSpread * 4) * MODEL_SCALE[2]);
-      if (intent.current.preset) {
-        direction.set(...DIRECTIONS[command.view]).normalize();
-        direction.y += .28 * pose.cameraLift; direction.normalize();
-        // Face the long facade as the stack opens, avoiding an excessively tall
-        // diagonal silhouette that forces every floor to shrink on screen.
-        if (command.view === 'perspective' || command.view === 'aerial') {
-          const [x, y, z] = EXPLODED_DIRECTIONS[command.view];
-          corner.set(x, y, z).normalize();
-          direction.lerp(corner, pose.cameraSpread).normalize();
-        }
-      } else {
-        direction.copy(intent.current.direction); direction.y += .28 * (pose.cameraLift - intent.current.lift); direction.normalize();
-      }
-      if (intent.current.preset) {
-        corner.set(...FLOOR_DIRECTIONS[command.view]).normalize();
-        direction.lerp(corner, focusAmount).normalize();
-      }
-      right.crossVectors(worldUp, direction).normalize(); up.crossVectors(direction, right).normalize();
-      let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-      // Fit actual architectural pieces, not one giant box containing empty air
-      // above the forecourt and beside the floating floors. Landscaping may extend
-      // to the edges; building geometry and label clearance define the default fit.
-      const projectBox = (x0: number, x1: number, y0: number, y1: number, z0: number, z1: number, origin = target) => {
-        for (const x of [x0, x1]) for (const y of [y0, y1]) for (const z of [z0, z1]) {
-          corner.set(x * MODEL_SCALE[0], y * MODEL_SCALE[1], z * MODEL_SCALE[2]).sub(origin);
-          const px = corner.dot(right), py = corner.dot(up);
-          minX = Math.min(minX, px); maxX = Math.max(maxX, px);
-          minY = Math.min(minY, py); maxY = Math.max(maxY, py);
-        }
-      };
-      pose.floorY.forEach((y, index) => projectBox(-36.5, 36.5, y - .15, y + (index === 4 ? 4.35 : 3.45), -9.4, index === 0 ? 13.4 : 12.1));
-      projectBox(-36.5, 36.5, pose.roofY - .2, pose.roofY + 1, -9.4, 9.4);
-      if (pose.accessoryOpacity > .01) projectBox(-8.1, 8.1, 0, 9.3, 10.5, 16.1);
-      // Center the real projected silhouette, including asymmetrical entrance depth.
-      target.addScaledVector(right, (minX + maxX) / 2).addScaledVector(up, (minY + maxY) / 2);
-      const usableWidth = Math.max(1, size.width - (motion.rail ? 210 : 60));
-      const usableHeight = Math.max(1, size.height - 96);
-      const stackZoom = Math.min(usableWidth / (maxX - minX), usableHeight / (maxY - minY));
-      const floorY = focusedFloorY(pose.floorY, focus.level);
-      floorTarget.set(0, (floorY + .7) * MODEL_SCALE[1], 1.5 * MODEL_SCALE[2]);
-      minX = minY = Infinity; maxX = maxY = -Infinity;
-      projectBox(-36.5, 36.5, floorY - .15, floorY + 1.5, -9.4, 13.4, floorTarget);
-      floorTarget.addScaledVector(right, (minX + maxX) / 2).addScaledVector(up, (minY + maxY) / 2);
-      const floorHeight = Math.max(1, size.height - (motion.rail ? 160 : 96));
-      const floorZoom = Math.min(usableWidth / (maxX - minX), floorHeight / (maxY - minY));
-      target.lerp(floorTarget, focusAmount);
-      destination.copy(direction).multiplyScalar(120).add(target);
-      motion.zoom = intent.current.zoomOverride ?? (stackZoom + (floorZoom - stackZoom) * focusAmount) * command.zoom;
-      if (retreat.active) {
-        // Pull out from the actual pose, including a user-orbited/zoomed view.
-        const remaining = Math.min(1, focus.amount / retreat.amount);
-        destination.lerp(retreat.position, remaining); target.lerp(retreat.target, remaining);
-        motion.zoom += (retreat.zoom - motion.zoom) * remaining;
-      }
-      motion.progress = controller.current; motion.amount = focus.amount; motion.level = focus.level; motion.dirty = false; motion.active = true;
-    }
-    if (!motion.active) return;
-    // Scroll uses the shared progress directly; only explicit view commands ease separately.
-    const blend = progressChanged || focusChanged || reduced.current ? 1 : 1 - Math.exp(-Math.min(delta, .1) * 9);
-    camera.position.lerp(destination, blend); camera.zoom += (motion.zoom - camera.zoom) * blend;
-    lookTarget.lerp(target, blend);
-    camera.lookAt(lookTarget); camera.updateProjectionMatrix(); controls.current?.target.copy(lookTarget); controls.current?.update();
-    if (camera.position.distanceToSquared(destination) < .0001 && Math.abs(camera.zoom - motion.zoom) < .0001) {
-      camera.position.copy(destination); camera.zoom = motion.zoom; camera.updateProjectionMatrix(); motion.active = false;
-    } else invalidate();
-  });
   return null;
 }
 
@@ -197,7 +52,7 @@ function FloorLabels({ controller, labels, focus }: Pick<SceneProps, 'controller
     labels.current.forEach((label, index) => {
       if (!label) return;
       point.set(38 * MODEL_SCALE[0], (pose.floorY[index] + .3) * MODEL_SCALE[1], 9 * MODEL_SCALE[2]).project(camera);
-      label.style.transform = `translate(${Math.max(8, Math.min(size.width - (rail.current ? 208 : 64), (point.x + 1) * size.width / 2))}px, ${(1 - point.y) * size.height / 2}px)`;
+      label.style.transform = `translate(${Math.max(8, Math.min(size.width - (rail.current ? 278 : 64), (point.x + 1) * size.width / 2))}px, ${(1 - point.y) * size.height / 2}px)`;
       label.style.opacity = String(pose.labelOpacity * (1 - focus.amount));
     });
   });
@@ -214,22 +69,22 @@ function SceneLifecycle({ onReady, onContextLost }: Pick<SceneProps, 'onReady' |
   return null;
 }
 
-export default function BuildingScene({ command, controller, selectedFloor, labels, focus, roomLabels, onReady, onContextLost, ...interaction }: SceneProps) {
+export default function BuildingScene({ command, controller, selectedFloor, labels, focus, roomLabels, hoverCard, onReady, onContextLost,onFallback, ...interaction }: SceneProps) {
   const reduced = useRef(false);
   return <Canvas orthographic frameloop="demand" dpr={[1, 1.5]} shadows
     camera={{ position: [90, 65, 110], zoom: 6, near: .1, far: 500 }}
     gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
-    onCreated={({ gl }) => { gl.shadowMap.type = PCFSoftShadowMap; }}
-    fallback={<p className="building-fallback">3D rendering is unavailable. Use Room list to continue monitoring.</p>}>
+    onCreated={({ gl }) => { gl.shadowMap.type = PCFSoftShadowMap; gl.shadowMap.autoUpdate=false; gl.shadowMap.needsUpdate=true; }}
+    fallback={<div className="building-fallback"><p>3D rendering is unavailable.</p><button onClick={onFallback}>Open room list</button></div>}>
     <ambientLight intensity={1.3} /><hemisphereLight args={['#FFFCFC', '#9B829A', 1.2]} />
     <directionalLight position={[-30, 95, 45]} intensity={2.6} castShadow shadow-mapSize={[2048, 2048]}
       shadow-camera-left={-70} shadow-camera-right={70} shadow-camera-top={90} shadow-camera-bottom={-80}
       shadow-camera-near={1} shadow-camera-far={220} shadow-bias={-.0008} shadow-normalBias={.08} />
-    <ExplosionClock controller={controller} focus={focus} reduced={reduced} />
+    <TransitionClock transitions={interaction.transitions} reduced={reduced} />
     <BuildingModel controller={controller} focus={focus} selectedFloor={selectedFloor} {...interaction} />
-    <CameraRig command={command} controller={controller} focus={focus} reduced={reduced} />
+    <CameraRig command={command} controller={controller} focus={focus} reduced={reduced} transitions={interaction.transitions} selectedRoom={interaction.selectedRoom} />
     <FloorLabels controller={controller} labels={labels} focus={focus} />
-    <RoomLabels floor={selectedFloor} focus={focus} controller={controller} labels={roomLabels} />
+    <RoomLabels floor={selectedFloor} focus={focus} controller={controller} labels={roomLabels} hoveredRoom={interaction.hoveredRoom} hoverCard={hoverCard} transitions={interaction.transitions} />
     <SceneLifecycle onReady={onReady} onContextLost={onContextLost} />
   </Canvas>;
 }

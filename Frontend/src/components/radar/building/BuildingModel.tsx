@@ -57,7 +57,7 @@ export function BuildingModel({ controller, selectedFloor, focus, ...interaction
     if (accessories.current) accessories.current.visible = pose.accessoryOpacity > .001;
     for (const { mesh, material, role, floor } of surfaces.current) {
       const weight = floor === null ? 0 : Math.max(0, 1 - Math.abs(focus.level - floor));
-      let opacity = role === 'shell' ? pose.shellOpacity * (1 - focus.amount) : role === 'base' ? pose.baseOpacity : role === 'accessory' ? pose.accessoryOpacity : role === 'roof' ? pose.roofOpacity : role === 'partition' ? .8 * pose.cameraSpread + .2 * focus.amount : 1;
+      let opacity = role === 'shell' ? pose.shellOpacity * (1 - focus.amount) : role === 'base' ? pose.baseOpacity * (1 - focus.amount) : role === 'accessory' ? pose.accessoryOpacity : role === 'roof' ? pose.roofOpacity : role === 'partition' ? .8 * pose.cameraSpread + .2 * focus.amount : role === 'analytical' ? focus.amount : 1;
       if (role === 'roof' || role === 'site' || role === 'accessory' || role === 'service') opacity *= 1 - focus.amount;
       if (floor !== null) opacity *= 1 - focus.amount * (1 - weight) * .99;
       material.opacity = opacity;

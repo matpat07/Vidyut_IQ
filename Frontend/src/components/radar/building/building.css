@@ -35,8 +35,16 @@
 .plan-marker { background: none; color: #161126; font-size: 8px; pointer-events: none !important; }
 .plan-room-label:hover, .plan-room-label[aria-pressed="true"] { background: #CA2127; color: #FFFCFC; }
 .plan-room-label:focus-visible { outline: 2px solid #CA2127; outline-offset: 3px; }
-.plan-hover { position: absolute; top: 66px; left: 12px; z-index: 3; max-width: 230px; padding: 9px 12px; background: var(--panel); color: var(--ink); border: 1px solid var(--muted); border-radius: 8px; pointer-events: none; font-size: 11px; }
+.plan-hover { position: absolute; top: 0; left: 0; visibility: hidden; z-index: 3; width: 210px; max-width: calc(100% - 16px); max-height: calc(100% - 84px); overflow-y: auto; overscroll-behavior: contain; padding: 9px 12px; background: var(--panel); color: var(--ink); border: 1px solid var(--muted); border-radius: 8px; font-size: 11px; }
 .plan-hover span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; line-height: 1.5; }
+.plan-hover button { margin-top: 7px; font-size: 10px; text-decoration: underline; text-underline-offset: 3px; }
+.plan-room-label { cursor: pointer; }
+.plan-room-label[data-kind="CORRIDOR"] { font-size: 8px; background: none; }
+.plan-close { display: block; margin-bottom: 12px; color: var(--muted); font-size: 10px; text-decoration: underline; text-underline-offset: 3px; }
+.plan-room-name, .plan-room-note { font-size: 10px; line-height: 1.6; margin-top: 8px; color: var(--muted); }
+.plan-detail-section { margin-top: 14px; border-top: 1px solid rgb(from var(--line) r g b / .2); padding-top: 10px; }
+.plan-detail-section h3 { font-size: 10px; font-weight: 500; margin-bottom: 5px; }
+.plan-detail-section p { font-size: 10px; line-height: 1.6; color: var(--muted); }
 .plan-room-detail { border-top: 1px solid rgb(from var(--line) r g b / .25); padding-top: 16px; }
 .plan-room-detail dl { margin: 12px 0; display: flex; flex-direction: column; gap: 8px; }
 .plan-room-detail dl > div { display: flex; justify-content: space-between; align-items: baseline; gap: 6px; }
@@ -141,6 +149,8 @@
   .plan-room-label[data-numbered="false"]:not([aria-pressed="true"]), .plan-marker, .is-focused .building-stage-label { display: none; }
   .plan-hover { top: 0; left: 0; font-size: 10px; max-width: 170px; padding: 5px 8px; }
   .plan-room-detail { padding: 0; border: 0; }
+  .plan-close { float: right; margin: 0 0 3px 8px; font-size: 9px; }
+  .plan-room-detail > .plan-room-name, .plan-room-detail > .floor-energy-source.plan-data-source { display: none; }
   .plan-room-detail dl { flex-direction: row; margin: 4px 0; gap: 12px; }
   .plan-room-detail dl > div { gap: 4px; }
   .plan-room-detail dd { font-size: 12px; }
@@ -167,3 +177,125 @@
   .building-floor-label { font-size: 8px; }
   .building-floor-label > span { width: 10px; }
 }
+/* Analytics controls stay outside the scrolling 3D surface. */
+.building-heading { position: relative; inset: auto; flex-shrink: 0; min-height: 48px; pointer-events: auto; }
+.building-stage { min-height: 0; }
+.radar-analytics { flex-shrink: 0; min-width: 0; }
+.radar-analytics-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.radar-map-modes { display: flex; gap: 3px; margin-right: auto; }
+.radar-map-modes button { border: 1px solid rgb(from var(--line) r g b / .35); border-radius: 6px; font-size: 10px; padding: 7px 10px; }
+.radar-map-modes button[aria-pressed="true"] { background: var(--ink); color: var(--canvas); }
+.radar-map-modes button:disabled { opacity: .45; cursor: default; }
+.radar-analytics-controls label { display: flex; align-items: center; gap: 5px; color: var(--muted); font-size: 9px; }
+.radar-analytics-controls select { background: var(--canvas); color: var(--ink); border: 1px solid var(--muted); border-radius: 5px; font-size: 10px; padding: 5px; max-width: 145px; }
+.radar-analytics-controls select:disabled { opacity: .4; }
+.radar-refresh { font-size: 10px; text-decoration: underline; }
+.radar-refresh:disabled { opacity: .4; cursor: default; }
+.radar-source-status { font-size: 9px; color: var(--muted); line-height: 1.5; margin-top: 7px; }
+.radar-source-status b { color: var(--ink); font-weight: 500; margin-right: 6px; }
+.radar-source-status > span { margin-left: 6px; }
+.radar-energy-legend { display: flex; align-items: center; flex-wrap: wrap; gap: 5px 12px; font-size: 9px; min-height: 28px; color: var(--muted); padding-top: 4px; overflow-y: auto; overscroll-behavior: contain; }
+.radar-energy-legend > span { display: inline-flex; align-items: center; gap: 5px; }
+.radar-energy-legend i { width: 10px; height: 10px; display: inline-block; border: 1px solid #9B829A; border-radius: 2px; }
+.radar-energy-legend em { font-style: normal; }
+.radar-data-badge { font-size: 9px; color: var(--ink); letter-spacing: .6px; margin-top: 8px; }
+.radar-reading-status, .radar-updated { font-size: 10px; line-height: 1.6; color: var(--muted); margin-top: 4px; }
+.radar-hover-metrics { display: grid; gap: 4px; margin: 8px 0; font-size: 10px; }
+.radar-hover-metrics > div { display: flex; justify-content: space-between; gap: 8px; }
+.radar-hover-metrics dt { color: var(--muted); }
+.radar-hover-metrics dd { margin: 0; font-variant-numeric: tabular-nums; }
+.radar-room-history { width: 100%; height: 130px; margin: 8px 0; }
+.radar-chart-tooltip { border: 1px solid #9B829A; background: var(--panel); color: var(--ink); border-radius: 5px; padding: 5px; font-size: 10px; }
+.radar-anomaly[data-severity="critical"] { color: #CA2127; }
+.plan-room-label[data-anomaly="warning"] { border: 1px solid #9B829A; }
+.plan-room-label[data-anomaly="critical"] { border: 1px solid #CA2127; }
+.plan-room-label[data-anomaly="critical"][aria-pressed="true"] { animation: radar-alert-pulse 3s ease-in-out infinite; }
+@keyframes radar-alert-pulse { 50% { box-shadow: 0 0 0 4px rgb(from #CA2127 r g b / .2); } }
+@media (prefers-reduced-motion: reduce) { .plan-room-label[data-anomaly] { animation: none !important; } }
+@media (min-width: 681px) { .radar-energy-legend { height: 32px; } }
+@media (max-width: 680px) {
+  .radar-analytics-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)) 38px; gap: 4px; }
+  .radar-map-modes { width: 100%; grid-column: 1 / -1; }
+  .radar-map-modes button { flex: 1; padding: 5px; }
+  .radar-analytics-controls label { flex-direction: column; align-items: stretch; min-width: 0; gap: 2px; font-size: 8px; }
+  .radar-analytics-controls select { width: 100%; max-width: none; padding: 3px; font-size: 9px; }
+  .radar-refresh { font-size: 8px; align-self: end; padding-bottom: 5px; }
+  .radar-energy-legend { height: 36px; font-size: 8px; align-content: start; }
+  .radar-source-status { height: 27px; overflow-y: auto; overscroll-behavior: contain; font-size: 8px; margin-top: 4px; }
+  .radar-data-badge { display: block; margin: 4px 0; font-size: 8px; }
+  .plan-room-detail dl { flex-wrap: wrap; }
+  .radar-room-history { min-width: 180px; }
+  .building-camera-controls button { padding: 7px 5px; font-size: 9px; }
+  /* Compact the existing simulator only inside Radar; retain every control. */
+  .is-radar .app-header + div { padding: 8px 16px; }
+  .is-radar .app-header + div > div { display: grid; grid-template-columns: minmax(0, 1fr) 106px; gap: 6px; }
+  .is-radar .app-header + div > div > div:first-child { display: contents; }
+  .is-radar .app-header + div > div > div:first-child > div:first-child { grid-column: 1; grid-row: 1; gap: 1px; }
+  .is-radar .app-header + div > div > div:first-child > div:first-child button { font-size: 10px; padding: 4px 6px; }
+  .is-radar .app-header + div > div > div:first-child > div:nth-child(2) { grid-column: 2; grid-row: 1; justify-self: end; }
+  .is-radar .app-header + div > div > div:first-child > div:nth-child(2) button { padding: 6px; font-size: 10px; }
+  .is-radar .app-header + div > div > div:first-child > div:last-child { grid-column: 1; grid-row: 2; min-width: 0; padding: 5px 8px; gap: 6px; }
+  .is-radar .app-header + div input { min-width: 0; }
+  .is-radar .app-header + div > div > div:last-child { grid-column: 2; grid-row: 2; align-self: center; justify-self: end; }
+  .is-radar .app-header + div > div > div:last-child > button { padding: 7px; font-size: 10px; }
+  .is-radar .radar-workspace, .is-radar .building-viewer { gap: 8px; }
+  .is-radar .radar-tabs button { padding: 6px 12px; }
+  .is-radar .building-heading { min-height: 40px; }
+}
+@media (min-width: 681px) {
+  .building-workbench { grid-template-columns: minmax(0, 1fr) 236px; }
+  .building-floor-panel { display: grid; grid-template-columns: 42px minmax(0, 1fr); grid-template-rows: auto minmax(0, 1fr) auto; gap: 10px; }
+  .floor-panel-heading { grid-column: 1 / -1; }
+  .floor-panel-buttons { grid-column: 1; grid-row: 2; align-self: start; }
+  .floor-panel-buttons button { justify-content: center; padding: 8px 4px; }
+  .floor-panel-buttons button > span:last-child { display: none; }
+  .floor-panel-content { grid-column: 2; grid-row: 2; scrollbar-width: thin; }
+  .floor-energy-summary, .plan-room-detail { border: 0; padding-top: 0; }
+  .floor-exits { grid-column: 1 / -1; display: flex; flex-direction: row; justify-content: space-between; gap: 5px; }
+  .floor-exits button { font-size: 9px; }
+  .building-camera-controls { left: calc((100% - 274px) / 2); }
+  .building-gesture { max-width: calc(100% - 274px); left: calc((100% - 274px) / 2); }
+}
+/* Campus Radar uses the existing typography, controls and exact theme tokens. */
+.building-room-tools { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.building-room-search { position: relative; display: flex; gap: 4px; align-items: center; }
+.building-room-search input { width: 150px; min-width: 0; padding: 6px 7px; border: 1px solid var(--muted); border-radius: 7px; background: var(--canvas); color: var(--ink); font-size: 11px; }
+.building-room-search button { padding: 6px 4px; font-size: 10px; }
+.building-room-tools .plan-room-picker { max-width: none; }
+.building-search-message { position: absolute; top: calc(100% + 5px); right: 0; min-width: 170px; padding: 8px; font-size: 10px; background: var(--panel); color: var(--ink); border: 1px solid var(--line); border-radius: 6px; z-index: 5; }
+.radar-context-content { animation: radar-panel-enter .18s ease-out both; }
+@keyframes radar-panel-enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+.radar-plan-list { display: flex; flex-direction: column; gap: 18px; }
+.radar-plan-filters { display: flex; align-items: end; gap: 14px; }
+.radar-plan-filters label { display: flex; flex-direction: column; gap: 6px; font-size: 11px; min-width: 0; }
+.radar-plan-filters label:first-child { flex: 1; }
+.radar-plan-filters input, .radar-plan-filters select { border: 1px solid var(--line); border-radius: 7px; padding: 8px 10px; background: var(--canvas); color: var(--ink); font-size: 11px; min-width: 0; }
+.radar-plan-filters p { font-size: 10px; color: var(--muted); padding-bottom: 8px; white-space: nowrap; }
+.radar-list-workbench { display: grid; grid-template-columns: minmax(0,1fr) 250px; gap: 22px; align-items: start; }
+.radar-plan-table { overflow-x: auto; overscroll-behavior: contain; }
+.radar-plan-table table { width: 100%; border-collapse: collapse; min-width: 480px; font-size: 11px; }
+.radar-plan-table caption { text-align: left; padding-bottom: 12px; color: var(--muted); font-size: 10px; }
+.radar-plan-table th { font-weight: 500; color: var(--muted); text-align: left; white-space: nowrap; }
+.radar-plan-table td, .radar-plan-table th { padding: 10px 8px; border-bottom: 1px solid rgb(from var(--line) r g b / .25); }
+.radar-plan-table tr[data-selected="true"] { background: rgb(from #9B829A r g b / .15); }
+.radar-plan-table td button { text-align: left; text-decoration: underline; text-underline-offset: 3px; }
+.radar-plan-table td button small { display: block; font-size: 9px; color: var(--muted); margin-top: 4px; }
+.radar-list-classification { display: flex; align-items: center; gap: 6px; }
+.radar-list-classification i { flex-shrink: 0; width: 9px; height: 9px; border: 1px solid #9B829A; border-radius: 2px; }
+.radar-list-detail { position: sticky; top: 0; max-height: 65dvh; overflow-y: auto; overscroll-behavior: contain; padding: 4px 10px 14px 4px; font-size: 11px; line-height: 1.6; scrollbar-width: thin; }
+.radar-existing-nodes { margin-top: 24px; }
+.radar-existing-nodes > summary { cursor: pointer; font-size: 11px; padding: 12px 0; }
+@media (max-width: 900px) { .radar-list-workbench { grid-template-columns: minmax(0,1fr) 200px; gap: 14px; } }
+@media (max-width: 680px) {
+  .building-room-tools { display: grid; grid-template-columns: minmax(0,1fr); gap: 4px; width: 145px; flex-shrink: 0; }
+  .building-room-search input { width: 100%; padding: 4px; font-size: 9px; }
+  .building-room-search button { font-size: 9px; padding: 4px 0; }
+  .building-room-tools .plan-room-picker { width: 100%; }
+  .radar-plan-filters { flex-wrap: wrap; gap: 8px; }
+  .radar-plan-filters p { display: none; }
+  .radar-list-workbench { grid-template-columns: minmax(0,1fr); }
+  .radar-list-detail { grid-row: 1; position: static; max-height: 240px; }
+  .radar-list-detail .plan-room-detail > .plan-room-name { display: block; }
+  .radar-plan-table { grid-row: 2; }
+}
+@media (prefers-reduced-motion: reduce) { .radar-context-content { animation: none; } }

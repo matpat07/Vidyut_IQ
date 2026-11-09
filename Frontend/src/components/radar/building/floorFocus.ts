@@ -1,4 +1,4 @@
-const damp = (value: number, target: number, delta: number, rate = 5) => {
+const damp = (value: number, target: number, delta: number, rate = 24) => {
   const next = value + (target - value) * (1 - Math.exp(-Math.min(Math.max(delta, 0), .1) * rate));
   return Math.abs(next - target) < .0005 ? target : next;
 };
@@ -12,6 +12,7 @@ export function createFloorFocus() {
   return {
     get amount() { return amount; }, get level() { return level; }, get floor() { return floor; },
     get returning() { return phase === 'leaving'; },
+    get settled() { return phase === 'stack' || phase === 'focused'; },
     getSnapshot: () => floor,
     get interactive() { return floor !== null && floor === requested && amount > .97 && (phase === 'entering' || phase === 'focused'); },
     subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
@@ -37,9 +38,9 @@ export function createFloorFocus() {
       } else if (phase === 'leaving') {
         // Keep the outgoing floor/elevation fixed until the camera has pulled
         // completely back. Elevation changes only while the full stack is visible.
-        amount = damp(amount, 0, delta, 7);
+        amount = damp(amount, 0, delta, 28);
         if (amount === 0) {
-          floor = null; phase = requested === null ? 'stack' : 'overview'; overviewTime = .24;
+          floor = null; phase = requested === null ? 'stack' : 'overview'; overviewTime = .1;
         }
       } else if (phase === 'overview') {
         overviewTime -= Math.min(Math.max(delta, 0), .1);

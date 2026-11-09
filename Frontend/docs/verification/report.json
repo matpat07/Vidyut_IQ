@@ -1,0 +1,99 @@
+{
+  "startedAt": "2026-11-09T05:59:46.983Z",
+  "checks": [
+    {
+      "name": "A: complete exterior, five levels, three distinct entrances and two lawns",
+      "passed": true
+    },
+    {
+      "name": "B: scoped forward/reverse wheel separation, aligned floors and stationary UI",
+      "passed": true
+    },
+    {
+      "name": "C: five independently defined floor maps, corrected facilities and room types",
+      "passed": true
+    },
+    {
+      "name": "D: actual room hover/click, clamped tooltip and honest unavailable details",
+      "passed": true
+    },
+    {
+      "name": "E: demo energy/history, evidence-backed anomalies and disconnected live state",
+      "passed": true
+    },
+    {
+      "name": "Resize/reduced motion, equivalent list and WebGL cleanup on navigation",
+      "passed": true
+    },
+    {
+      "name": "Existing dashboard, three shortcut destinations and room modal remain functional",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "01-exterior.png",
+    "01b-front.png",
+    "02-half-exploded.png",
+    "03-exploded.png",
+    "04-floor-1.png",
+    "05-floor-4.png",
+    "06-room-hover.png",
+    "07a-room-6207-unavailable.png",
+    "07-room-details.png",
+    "08-energy-view.png",
+    "09-anomaly-view.png"
+  ],
+  "errors": [],
+  "environment": {
+    "renderer": "Chrome software WebGL; not a hardware FPS benchmark",
+    "browser": "Chrome/156.0.8078.81"
+  },
+  "exterior": {
+    "extruded": true,
+    "curves": [
+      3.141592653589793,
+      3.141592653589793
+    ],
+    "canopies": 2,
+    "lawns": 2,
+    "bounds": {
+      "left": 52.13752313149045,
+      "right": 921.559500801969,
+      "top": 27.32411704599245,
+      "bottom": 502.62936926332077
+    },
+    "width": 1202,
+    "height": 588.5,
+    "calls": 115,
+    "triangles": 36464
+  },
+  "floors": [
+    {
+      "floor": 1,
+      "options": 31,
+      "visibleLabels": 31
+    },
+    {
+      "floor": 2,
+      "options": 34,
+      "visibleLabels": 34
+    },
+    {
+      "floor": 3,
+      "options": 34,
+      "visibleLabels": 34
+    },
+    {
+      "floor": 4,
+      "options": 32,
+      "visibleLabels": 32
+    },
+    {
+      "floor": 5,
+      "options": 32,
+      "visibleLabels": 32
+    }
+  ],
+  "passed": true,
+  "finishedAt": "2026-11-09T06:00:37.809Z"
+}

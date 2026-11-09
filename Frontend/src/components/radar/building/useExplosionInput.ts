@@ -2,7 +2,7 @@ import { RefObject, useEffect } from 'react';
 import { ExplosionController, normalizeWheel } from './explosion';
 
 /** No window/body scroll listener, document pinning, or global preventDefault. */
-export function useExplosionInput(surface: RefObject<HTMLDivElement>, controller: ExplosionController, enabled = true) {
+export function useExplosionInput(surface: RefObject<HTMLDivElement>, controller: Pick<ExplosionController,'set'|'getSnapshot'>, enabled = true) {
   useEffect(() => {
     const element = surface.current;
     if (!element || !enabled) return;

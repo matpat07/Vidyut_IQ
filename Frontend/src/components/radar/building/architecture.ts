@@ -17,6 +17,7 @@ export const MODEL_SCALE: Point3 = [
 
 // Reference colors are confined to physical model materials (Phase 1 approval).
 export const MATERIALS = {
+  planWall: { color: '#E6D1E5', roughness: 0.92 },
   selection: { color: '#CA2127', roughness: 0.7 },
   wall: { color: '#EEE5D3', roughness: 0.88 },
   orange: { color: '#E79A29', roughness: 0.72 },

@@ -4,19 +4,26 @@ import { useSimulation } from '../../context/SimulationContext';
 import { RoomCard } from './RoomCard';
 import { Search, AlertTriangle, Building2, Layers } from 'lucide-react';
 import './building/building.css';
+import type { ConnectedEnergyProvider,DataMode,EnergyPeriod } from './energy/energyTypes';
 
 const BuildingViewer = lazy(() => import('./building/BuildingViewer'));
+const PlanRoomList=lazy(()=>import('./PlanRoomList'));
 
 interface CampusRadarProps {
   onInspectRoom: (roomId: string) => void;
+  energyProvider?: ConnectedEnergyProvider;
 }
 
 type FilterType = 'ALL' | 'CLASSROOM' | 'LAB' | 'ALERTS_ONLY';
 
-export const CampusRadar: React.FC<CampusRadarProps> = ({ onInspectRoom }) => {
+export const CampusRadar: React.FC<CampusRadarProps> = ({ onInspectRoom, energyProvider }) => {
   const [view, setView] = useState<'building' | 'rooms'>('building');
   const [activeFilter, setActiveFilter] = useState<FilterType>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
+  const [energyMode,setEnergyMode]=useState<DataMode>('demo');
+  const [energyPeriod,setEnergyPeriod]=useState<EnergyPeriod>('hour');
+  const preferences={mode:energyMode,period:energyPeriod,setMode:setEnergyMode,setPeriod:setEnergyPeriod};
+  const showRoomList=()=>{setView('rooms');requestAnimationFrame(()=>document.getElementById('rooms-tab')?.focus());};
   const onViewKey: React.KeyboardEventHandler<HTMLDivElement> = event => {
     if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return;
     event.preventDefault();
@@ -33,7 +40,7 @@ export const CampusRadar: React.FC<CampusRadarProps> = ({ onInspectRoom }) => {
       <p>Architecture and energy monitoring</p>
     </div>
     <div id="radar-panel" role="tabpanel" aria-labelledby={view === 'building' ? 'building-tab' : 'rooms-tab'} className={view === 'building' ? 'building-viewer' : 'radar-room-list'}>
-      {view === 'building' ? <Suspense fallback={<p role="status">Loading building view…</p>}><BuildingViewer onShowRooms={() => setView('rooms')} onInspectRoom={onInspectRoom} /></Suspense> : <RoomList onInspectRoom={onInspectRoom} activeFilter={activeFilter} setActiveFilter={setActiveFilter} searchQuery={searchQuery} setSearchQuery={setSearchQuery} />}
+      <Suspense fallback={<p role="status">Loading campus view…</p>}>{view === 'building' ? <BuildingViewer onShowRooms={showRoomList} onInspectRoom={onInspectRoom} energyProvider={energyProvider} preferences={preferences} /> : <><PlanRoomList energyProvider={energyProvider} preferences={preferences} onInspectRoom={onInspectRoom}/><details className="radar-existing-nodes"><summary>Existing simulation node cards</summary><RoomList onInspectRoom={onInspectRoom} activeFilter={activeFilter} setActiveFilter={setActiveFilter} searchQuery={searchQuery} setSearchQuery={setSearchQuery} /></details></>}</Suspense>
     </div>
   </div>;
 };
@@ -144,6 +151,7 @@ const RoomList: React.FC<RoomListProps> = ({ onInspectRoom, activeFilter, setAct
             
             <input
               type="text"
+              aria-label="Search simulation nodes"
               placeholder="Search room (e.g. 6102, IoT)..."
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
