@@ -17,22 +17,34 @@ import { TeacherScheduleView } from './components/teacher/TeacherScheduleView';
 import { RoomAvailabilityFinder } from './components/student/RoomAvailabilityFinder';
 import { HardwareCostingModal } from './components/hardware/HardwareCostingModal';
 import { AssumptionsModal } from './components/analytics/AssumptionsModal';
-
+import { AuthProvider, useAuth } from './context/AuthContext';
+import { LoginView } from './components/auth/Login';
 const MainLayout: React.FC = () => {
   const { currentRole } = useSimulation();
+  const { user, loading } = useAuth();
+
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
-    try { return localStorage.getItem('vidyutiq-theme') === 'light' ? 'light' : 'dark'; } catch { return 'dark'; }
+    try {
+      return localStorage.getItem('vidyutiq-theme') === 'light' ? 'light' : 'dark';
+    } catch {
+      return 'dark';
+    }
   });
-  React.useEffect(() => {
-    document.documentElement.dataset.theme = theme;
-    try { localStorage.setItem('vidyutiq-theme', theme); } catch { /* Storage can be unavailable. */ }
-  }, [theme]);
 
   const [currentView, setCurrentView] = useState<NavView>('DASHBOARD');
   const [isOpenMobileSidebar, setIsOpenMobileSidebar] = useState<boolean>(false);
   const [inspectingRoomId, setInspectingRoomId] = useState<string | null>(null);
   const [isHardwareModalOpen, setIsHardwareModalOpen] = useState<boolean>(false);
   const [isAssumptionsModalOpen, setIsAssumptionsModalOpen] = useState<boolean>(false);
+
+  React.useEffect(() => {
+    document.documentElement.dataset.theme = theme;
+    try {
+      localStorage.setItem('vidyutiq-theme', theme);
+    } catch {
+      /* Storage can be unavailable. */
+    }
+  }, [theme]);
 
   // Sync role changes with respective default portal views
   React.useEffect(() => {
@@ -44,6 +56,19 @@ const MainLayout: React.FC = () => {
       setCurrentView('DASHBOARD');
     }
   }, [currentRole]);
+
+  // Early returns come strictly AFTER all hooks have run
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-950 text-cyan-400 font-mono text-sm tracking-wider">
+        INITIALIZING VIDYUT IQ...
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginView />;
+  }
 
   return (
     <div className={`app-shell${currentView === 'RADAR' ? ' is-radar' : ''}`}>
@@ -60,27 +85,29 @@ const MainLayout: React.FC = () => {
       <div className="app-content">
         
         {/* Top Header */}
-        <Header theme={theme} onToggleTheme={() => setTheme(value => value === 'dark' ? 'light' : 'dark')} 
-          currentView={currentView}
-          onOpenMobileSidebar={() => setIsOpenMobileSidebar(true)}
-          onOpenAssumptions={() => setIsAssumptionsModalOpen(true)}
-          onOpenHardwareBOM={() => setIsHardwareModalOpen(true)}
-        />
+        <Header
+  theme={theme}
+  onToggleTheme={() => setTheme(value => value === 'dark' ? 'light' : 'dark')} 
+  currentView={currentView}
+  onOpenMobileSidebar={() => setIsOpenMobileSidebar(true)}
+  onOpenAssumptions={() => setIsAssumptionsModalOpen(true)}
+  onOpenHardwareBOM={() => setIsHardwareModalOpen(true)}
+/>
 
         {/* Global Simulation Bar (Time slider, speed, & judge presets) */}
-        <SimulationBar />
+{/* <SimulationBar /> */}
 
         {/* Dynamic Page Views with Smooth Crossfade */}
-        <main className="page-content">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentView}
-              initial={{ opacity: 0, y: 6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.2, ease: 'easeOut' }}
-              className="space-y-6"
-            >
+        <main className="w-full flex-1 p-2 md:p-4 overflow-hidden">
+  <AnimatePresence mode="wait">
+    <motion.div
+      key={currentView}
+      initial={{ opacity: 0, y: 6 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, y: -6 }}
+      transition={{ duration: 0.2, ease: 'easeOut' }}
+      className="w-full h-full"
+    >
               {/* View 1: Executive Dashboard */}
               {currentView === 'DASHBOARD' && (
                 <DashboardOverview
@@ -134,7 +161,6 @@ const MainLayout: React.FC = () => {
         {/* Light Minimalist Footer */}
         <footer className="border-t border-line/80 bg-panel px-4 py-4 text-center text-xs text-muted space-y-1">
           <div className="flex items-center justify-center gap-2">
-            
             <span className="font-semibold text-ink">VidyutIQ</span>
             <span className="text-muted">•</span>
             <span className="text-muted">Smarter Energy. Greener Campus.</span>
@@ -181,9 +207,11 @@ const MainLayout: React.FC = () => {
 
 export const App: React.FC = () => {
   return (
-    <SimulationProvider>
-      <MainLayout />
-    </SimulationProvider>
+    <AuthProvider>
+      <SimulationProvider>
+        <MainLayout />
+      </SimulationProvider>
+    </AuthProvider>
   );
 };
 
