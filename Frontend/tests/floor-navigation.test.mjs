@@ -144,7 +144,7 @@ test('camera focus waits for the stack to open, settles, switches floors and rev
   for (let i = 0; i < 160; i++) focus.advance(1 / 60, 1, false);
   assert.equal(focus.amount, 1); assert(focus.interactive);
   focus.select(5); assert(!focus.interactive);
-  focus.advance(1 / 60, 1, false); assert.equal(focus.level, 2); assert(focus.amount < 1);
+  focus.advance(1 / 60, 1, false); assert(focus.level > 2 && focus.level < 5); assert.equal(focus.amount, 1);
   focus.select(1);
   for (let i = 0; i < 200; i++) focus.advance(1 / 60, 1, false);
   assert.equal(focus.level, 1); assert(focus.interactive);
@@ -154,22 +154,20 @@ test('camera focus waits for the stack to open, settles, switches floors and rev
   assert.equal(focus.advance(1 / 60, 1, false), false);
   assert.equal(focusedFloorY([2.2,11.6,21,30.4,39.8], 2.5), 16.3);
 });
-test('switching floors shows the complete stack before changing elevation and diving again', () => {
+test('switching floors stays focused and moves directly to the next elevation', () => {
   const focus = createFloorFocus(); focus.select(2); focus.advance(0, 1, true);
   focus.select(5);
-  let sawStack = false, stackFrames = 0, enteredNext = false;
+  let previousLevel = 2;
+  assert(!focus.interactive);
   for (let frame = 0; frame < 240; frame++) {
-    const oldLevel = focus.level;
     focus.advance(1 / 60, 1, false);
-    if (focus.amount === 0) { sawStack = true; stackFrames++; }
-    if (focus.level !== oldLevel) {
-      assert.equal(focus.amount, 0, 'never move between floors while zoomed in');
-      assert(sawStack); assert(stackFrames >= 6, 'overview is visible before the next dive');
-      enteredNext = true;
-    }
-    if (!enteredNext) assert.equal(focus.level, 2);
+    assert.equal(focus.amount, 1, 'never pull back to the exploded overview');
+    assert.equal(focus.floor, 5);
+    assert(!focus.returning);
+    assert(focus.level >= previousLevel && focus.level <= 5);
+    previousLevel = focus.level;
   }
-  assert(enteredNext); assert.equal(focus.floor, 5); assert(focus.interactive);
+  assert.equal(focus.level, 5); assert(focus.interactive);
 });
 test('reset during a floor switch cancels the pending dive and settles on the full stack', () => {
   const focus = createFloorFocus(); focus.select(1); focus.advance(0, 1, true);
@@ -180,12 +178,12 @@ test('reset during a floor switch cancels the pending dive and settles on the fu
   assert.equal(focus.floor, null); assert.equal(focus.amount, 0); assert(!focus.interactive);
   assert.equal(focus.advance(1 / 60, 1, false), false);
 });
-test('floor focus is quick at different frame rates while retaining the stack between floors', () => {
+test('floor focus is quick at different frame rates with direct floor switches', () => {
   for (const fps of [30,60,120]) {
     const focus=createFloorFocus(),delta=1/fps;
     const finish=()=>{let elapsed=0;while(!focus.settled&&elapsed<2){focus.advance(delta,1,false);elapsed+=delta;}assert(focus.settled);return elapsed;};
     focus.select(2);assert(finish()<=.4,'enter an already exploded floor in at most 400ms');
-    focus.select(5);assert(finish()<=.85,'complete pull-out, stack pause and next dive within 850ms');
+    focus.select(5);assert(finish()<=.4,'switch directly between floors within 400ms');
     assert.equal(focus.floor,5);assert(focus.interactive);
   }
 });

@@ -5,8 +5,7 @@ const damp = (value: number, target: number, delta: number, rate = 24) => {
 /** One shared focus pose drives the camera, cutaway and room interaction gate. */
 export function createFloorFocus() {
   let floor: number | null = null, requested: number | null = null, amount = 0, level = 1;
-  let phase: 'stack' | 'entering' | 'focused' | 'leaving' | 'overview' = 'stack';
-  let overviewTime = 0;
+  let phase: 'stack' | 'entering' | 'focused' | 'leaving' = 'stack';
   const listeners = new Set<() => void>();
   const notify = () => listeners.forEach(listener => listener());
   return {
@@ -14,18 +13,17 @@ export function createFloorFocus() {
     get returning() { return phase === 'leaving'; },
     get settled() { return phase === 'stack' || phase === 'focused'; },
     getSnapshot: () => floor,
-    get interactive() { return floor !== null && floor === requested && amount > .97 && (phase === 'entering' || phase === 'focused'); },
+    get interactive() { return floor !== null && floor === requested && level === floor && amount > .97 && (phase === 'entering' || phase === 'focused'); },
     subscribe(listener: () => void) { listeners.add(listener); return () => { listeners.delete(listener); }; },
     select(value: number | null) {
       if (value !== null && (!Number.isInteger(value) || value < 1 || value > 5)) return;
       if (value === requested) return;
       requested = value;
-      if (phase !== 'leaving' && phase !== 'overview') {
-        if (amount > 0) phase = 'leaving';
-        else {
-          floor = value; if (value !== null) level = value;
-          phase = value === null ? 'stack' : 'entering';
-        }
+      if (value === null) phase = amount > 0 ? 'leaving' : 'stack';
+      else {
+        floor = value;
+        if (amount === 0) level = value;
+        phase = 'entering';
       }
       notify();
     },
@@ -36,24 +34,19 @@ export function createFloorFocus() {
         amount = floor !== null && explosion >= .72 ? 1 : 0;
         phase = floor === null ? 'stack' : amount === 1 ? 'focused' : 'entering';
       } else if (phase === 'leaving') {
-        // Keep the outgoing floor/elevation fixed until the camera has pulled
-        // completely back. Elevation changes only while the full stack is visible.
+        // Only an explicit exit pulls back to the full stack.
         amount = damp(amount, 0, delta, 28);
         if (amount === 0) {
-          floor = null; phase = requested === null ? 'stack' : 'overview'; overviewTime = .1;
-        }
-      } else if (phase === 'overview') {
-        overviewTime -= Math.min(Math.max(delta, 0), .1);
-        if (requested === null) phase = 'stack';
-        else if (overviewTime <= 0 && explosion >= .72) {
-          floor = requested; level = requested; phase = 'entering';
+          floor = null; phase = 'stack';
         }
       } else if (phase === 'entering') {
+        // Keep the close-up pose while moving directly to the requested floor.
+        if (requested !== null) level = damp(level, requested, delta);
         amount = damp(amount, explosion >= .72 ? 1 : 0, delta);
-        if (amount === 1) phase = 'focused';
+        if (amount === 1 && level === requested) phase = 'focused';
       }
       if (floor !== oldFloor) notify();
-      const changed = amount !== oldAmount || level !== oldLevel || phase !== oldPhase || phase === 'overview';
+      const changed = amount !== oldAmount || level !== oldLevel || phase !== oldPhase;
       return changed;
     },
   };

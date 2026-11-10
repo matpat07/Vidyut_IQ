@@ -34,11 +34,11 @@ test('orbit, scroll and cinematic transitions cannot own the camera simultaneous
   assert(c.beginOrbit());c.endOrbit();assert(c.canPick);
   c.setView('top');assert(!c.canPick);c.cameraSettled();assert(c.canPick);
 });
-test('latest floor/search intent wins, reset clears pending rooms, and switching visits the full stack',()=>{
+test('latest floor/search intent wins, reset clears pending rooms, and switching stays focused',()=>{
   const c=createTransitionController();c.selectFloor(2);settle(c);c.selectRoom('6207');settle(c);
-  c.selectFloor(5);let stack=false;
-  for(let i=0;i<1500;i++){c.advance(1/60,false);if(c.focus.floor===null)stack=true;}c.cameraSettled();
-  assert(stack);assert.equal(c.focus.floor,5);assert.equal(c.getSnapshot().roomId,null);
+  c.selectFloor(5);
+  for(let i=0;i<1500;i++){c.advance(1/60,false);assert.equal(c.focus.amount,1);assert.equal(c.getSnapshot().state,'FLOOR_FOCUS');}c.cameraSettled();
+  assert.equal(c.focus.floor,5);assert.equal(c.getSnapshot().roomId,null);
   c.inspectSpace('6406');c.inspectSpace('6506');settle(c);assert.equal(c.focus.floor,5);assert.equal(c.getSnapshot().roomId,'6506');
   c.inspectSpace('6207');c.stack();settle(c);assert.equal(c.getSnapshot().roomId,null);assert.equal(c.getSnapshot().requestedFloor,null);
   assert.equal(c.getSnapshot().state,'EXPLODED_OVERVIEW');

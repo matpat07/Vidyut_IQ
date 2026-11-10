@@ -106,7 +106,7 @@ Provider failures, aborted/stale requests and mismatched periods never become de
 
 ## Maintaining interactions and style
 
-Send camera/selection intent through `transitionController.ts`; do not mutate the camera from event handlers or introduce independent floor timelines. `explosionPose()` remains the single normalized pose function. Reset goes to the exploded stack; switching floors pulls out through that stack; reduced motion uses the same final states. New camera work must preserve the fixed DOM controls and demand-frame cleanup.
+Send camera/selection intent through `transitionController.ts`; do not mutate the camera from event handlers or introduce independent floor timelines. `explosionPose()` remains the single normalized pose function. Reset goes to the exploded stack; switching floors keeps the focused pose and interpolates directly to the next elevation; reduced motion uses the same final states. New camera work must preserve the fixed DOM controls and demand-frame cleanup.
 
 Use existing theme tokens or the exact five UI colors: `#FFFCFC`, `#E6D1E5`, `#9B829A`, `#CA2127`, `#161126`. Transparency is permitted. Only the physical architecture retains separately approved reference colors. Preserve the native typography and restrained analytical overlays.
 
