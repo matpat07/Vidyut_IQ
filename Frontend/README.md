@@ -8,7 +8,7 @@ npm run dev
 
 Open the local URL printed by Vite, normally `http://localhost:5173`. In PowerShell, use `npm.cmd` if the execution policy blocks `npm.ps1`.
 
-The public landing page opens at `/`. Launch Dashboard opens `/app/dashboard`; Campus Radar opens `/app/radar`. All eight existing workspace views support direct URLs and browser history. Production hosting must serve `index.html` for `/app/*` requests, as Vite's dev and preview servers do.
+The public landing page opens at `/`. Launch Dashboard opens `/app/dashboard`; Campus Radar opens `/app/radar`. All eight existing workspace views support direct URLs and browser history. The checked-in Netlify configuration rewrites known app routes to `index.html` and leaves unknown asset requests as 404s; see the deployment guide below.
 
 ```sh
 npm test
@@ -18,6 +18,12 @@ npm run preview
 ```
 
 Campus Radar uses the existing simulator in explicitly labeled Demo mode. Connected mode remains unavailable until a real energy provider is supplied; the repository does not contain a running energy API.
+
+Root `npm ci` / `npm install` also install this active frontend through the root postinstall hook. Root dev/build/preview/test commands now delegate here; the earlier root `src/` remains available through explicit legacy scripts.
+
+- [Final 3–5 minute judge demo guide](docs/FINAL_DEMO_GUIDE.md)
+- [Netlify configuration and manual deployment steps](docs/DEPLOYMENT.md)
+- [Submission verification and limitations](docs/submission-verification/README.md)
 
 - [Developer guide: geometry, rooms, layouts and energy mappings](docs/campus-radar-developer-guide.md)
 - [Final milestone verification and screenshots](docs/verification/README.md)

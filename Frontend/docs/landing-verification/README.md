@@ -2,7 +2,7 @@
 
 Run `npm run verify:landing` with an existing Puppeteer-compatible module and Chrome, as described in [the implementation guide](../landing-page.md). The script records actual check results in [report.json](report.json) and captures the screenshots beside this file.
 
-The landing audit includes eleven browser groups, including manual process-step selection and its handoff back to scrolling. The regular test suite passed all 36 tests, the standalone TypeScript check passed, and `npm run build` succeeded. Vite retains its advisory for the existing large workspace/Three.js chunks. The built frontend also passed three [production smoke checks](production-smoke.json): direct Campus Radar loading, Radar refresh, and dashboard/home navigation.
+The landing audit includes eleven browser groups, including manual process-step selection and its handoff back to scrolling. The current regular test suite passed all 39 tests, the standalone TypeScript check passed, and `npm run build` succeeded. Vite retains its advisory for the existing large workspace/Three.js chunks. The earlier [production smoke checks](production-smoke.json) covered direct Radar loading, refresh and home navigation; the final [submission audit](../submission-verification/README.md) extends this to built routes, demo claims and Eco-Off calculations.
 
 The audit covers the real hero model and idle rendering, page scrolling over the canvas, carousel autoplay/pause/drag/manual controls, touch swiping, staged twin navigation, the supplied campus image and modal keyboard focus, all eight direct application routes, history and refresh, shared simulator state, theme persistence, responsive layouts, reduced motion and a separate Chrome process with WebGL disabled.
 

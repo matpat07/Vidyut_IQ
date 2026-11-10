@@ -2,7 +2,7 @@ import { useDialog } from '../../hooks/useDialog';
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useSimulation } from '../../context/SimulationContext';
-import { generateAIAnomalyInsight } from '../../services/aiAnomalyPreview';
+import { generateRuleBasedDiagnostic } from '../../services/aiAnomalyPreview';
 import {
   X,
   ShieldAlert,
@@ -43,7 +43,7 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
   const { metadata, roomState, telemetry, occupancyProfile, activeAlert } = data;
 
   const aiInsight = activeAlert
-    ? generateAIAnomalyInsight(activeAlert, telemetry, metadata)
+    ? generateRuleBasedDiagnostic(activeAlert, telemetry, metadata)
     : null;
 
   const excessWatts = activeAlert ? activeAlert.excessWatts : 0;
@@ -79,13 +79,13 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
         className="relative z-10 bg-panel border border-line/30 rounded-2xl w-full max-w-2xl max-h-[92vh] flex flex-col shadow-2xl overflow-hidden"
       >
         {/* Header */}
-        <div className="px-6 py-4 border-b border-line/30 flex items-center justify-between bg-panel/50">
-          <div className="flex items-center gap-3">
-            <span className="font-mono text-sm font-semibold px-2.5 py-1 rounded-lg bg-panel text-ink border border-line/30">
+        <div className="px-6 py-4 border-b border-line/30 flex items-start sm:items-center justify-between gap-2 bg-panel/50">
+          <div className="flex items-start sm:items-center gap-3 min-w-0 flex-1">
+            <span className="font-mono text-sm font-semibold px-2.5 py-1 rounded-lg bg-panel text-ink border border-line/30 shrink-0">
               {metadata.id}
             </span>
-            <div>
-              <div className="flex items-center gap-2">
+            <div className="min-w-0">
+              <div className="flex flex-wrap items-center gap-2">
                 <h2 className="text-base font-medium text-ink leading-tight">
                   {metadata.name}
                 </h2>
@@ -109,7 +109,7 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1.5 rounded-xl text-muted hover:text-ink hover:bg-soft transition-colors"
+            className="p-1.5 rounded-xl text-muted hover:text-ink hover:bg-soft transition-colors shrink-0"
           >
             <span>Close</span>
           </button>
@@ -181,21 +181,21 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
                   {/* Occupancy Card */}
                   <div className="p-4 rounded-xl bg-panel border border-line/30">
                     <div className="flex items-center justify-between text-muted mb-1">
-                      <span className="text-xs font-medium">Radar Occupancy</span>
+                      <span className="text-xs font-medium">Simulated occupancy</span>
                       
                     </div>
                     <span className="font-mono text-lg font-semibold text-ink block">
                       {telemetry.simulatedPirPresence ? `${telemetry.simulatedOccupantCount} Seated` : 'Vacant (0)'}
                     </span>
                     <span className="text-xs text-muted block mt-0.5">
-                      {telemetry.simulatedPirPresence ? 'mmWave: Active Motion' : 'mmWave: Room Clear'}
+                      {telemetry.simulatedPirPresence ? 'Simulated signal: presence' : 'Simulated signal: no presence'}
                     </span>
                   </div>
 
                   {/* Power Draw Card */}
                   <div className="p-4 rounded-xl bg-panel border border-line/30">
                     <div className="flex items-center justify-between text-muted mb-1">
-                      <span className="text-xs font-medium">Power Draw</span>
+                      <span className="text-xs font-medium">Simulated power</span>
                       
                     </div>
                     <span className="font-mono text-lg font-semibold text-ink block">
@@ -224,17 +224,17 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
                 {/* Quick Status Comparison */}
                 <div className="p-4 rounded-xl bg-panel border border-line/30 space-y-3">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-ink">Contactor Relay State</span>
+                    <span className="font-medium text-ink">Simulated switching state</span>
                     <span className={`font-mono font-medium px-2 py-0.5 rounded ${roomState.isEcoOff ? 'bg-panel text-danger border border-line/30' : 'bg-panel text-ink border border-line/30'}`}>
                       {roomState.isEcoOff ? 'TRIPPED (Eco-Off)' : 'CLOSED (Active)'}
                     </span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-ink">Ambient Temperature (BME280)</span>
+                    <span className="font-medium text-ink">Simulated temperature</span>
                     <span className="font-mono font-medium text-ink">{telemetry.simulatedTempCelsius} °C</span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-medium text-ink">Grid Voltage & Current</span>
+                    <span className="font-medium text-ink">Simulated voltage / current</span>
                     <span className="font-mono font-medium text-ink">{telemetry.simulatedVoltage}V / {telemetry.simulatedCurrent}A</span>
                   </div>
                 </div>
@@ -282,7 +282,7 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
                 {/* Circuit Load Distribution */}
                 <div className="p-4 rounded-xl bg-panel border border-line/30 space-y-3">
                   <h4 className="text-xs font-medium text-ink uppercase tracking-wider">
-                    Connected Sub-Circuits & Power Draw
+                    Modeled appliances · nameplate demand
                   </h4>
                   <div className="space-y-2">
                     {roomState.appliances.map((app, idx) => {
@@ -351,11 +351,11 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
                     )}
                   </div>
 
-                  {/* Sensor Reality */}
+                  {/* Simulated occupancy */}
                   <div className={`p-4 rounded-xl border space-y-2 ${isWasting ? 'bg-panel/70 border-line/30' : 'bg-panel/70 border-line/30'}`}>
                     <div className="flex items-center justify-between">
                       <span className="text-xs font-medium uppercase tracking-wider text-ink">
-                        Sensor Reality
+                        Simulated occupancy
                       </span>
                       <span className={`text-xs font-mono font-medium px-2 py-0.5 rounded ${isWasting ? 'bg-soft text-danger' : 'bg-soft text-ink'}`}>
                         {telemetry.simulatedPirPresence ? 'Occupied' : 'Vacant'}
@@ -364,7 +364,7 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
 
                     <div className="space-y-1 pt-1 text-xs">
                       <div className="font-medium text-ink text-sm">
-                        {telemetry.simulatedPirPresence ? `${telemetry.simulatedOccupantCount} People Detected` : 'Zero Physical Presence'}
+                        {telemetry.simulatedPirPresence ? `${telemetry.simulatedOccupantCount} modeled occupants` : 'No simulated presence'}
                       </div>
                       <div className="text-ink">
                         Power Draw: <strong className="font-mono text-ink">{telemetry.simulatedPowerWatts} W</strong>
@@ -407,37 +407,37 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
               >
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                   <div className="p-3 rounded-xl bg-panel border border-line/30">
-                    <span className="text-xs text-muted block">PZEM Active Power</span>
+                    <span className="text-xs text-muted block">Simulated meter power</span>
                     <span className="font-mono text-base font-semibold text-ink block mt-0.5">
                       {telemetry.simulatedPowerWatts} W
                     </span>
                   </div>
                   <div className="p-3 rounded-xl bg-panel border border-line/30">
-                    <span className="text-xs text-muted block">RMS Voltage</span>
+                    <span className="text-xs text-muted block">Simulated voltage</span>
                     <span className="font-mono text-base font-semibold text-ink block mt-0.5">
                       {telemetry.simulatedVoltage} V
                     </span>
                   </div>
                   <div className="p-3 rounded-xl bg-panel border border-line/30">
-                    <span className="text-xs text-muted block">RMS Current</span>
+                    <span className="text-xs text-muted block">Simulated current</span>
                     <span className="font-mono text-base font-semibold text-ink block mt-0.5">
                       {telemetry.simulatedCurrent} A
                     </span>
                   </div>
                   <div className="p-3 rounded-xl bg-panel border border-line/30">
-                    <span className="text-xs text-muted block">Power Factor (PF)</span>
+                    <span className="text-xs text-muted block">Simulated power factor</span>
                     <span className="font-mono text-base font-semibold text-ink block mt-0.5">
                       {telemetry.simulatedPowerFactor}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl bg-panel border border-line/30">
-                    <span className="text-xs text-muted block">LD2410C mmWave</span>
+                    <span className="text-xs text-muted block">Simulated occupancy</span>
                     <span className="font-mono text-base font-semibold text-ink block mt-0.5">
                       {telemetry.simulatedPirPresence ? `${telemetry.simulatedOccupantCount} Occ` : '0 Occ'}
                     </span>
                   </div>
                   <div className="p-3 rounded-xl bg-panel border border-line/30">
-                    <span className="text-xs text-muted block">BME280 Temp</span>
+                    <span className="text-xs text-muted block">Simulated temperature</span>
                     <span className="font-mono text-base font-semibold text-ink block mt-0.5">
                       {telemetry.simulatedTempCelsius} °C
                     </span>
@@ -450,10 +450,10 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
                     <div className="flex items-center justify-between">
                       <span className="flex items-center gap-1.5 font-medium text-ink text-xs">
                         
-                        <span>AI Diagnostic Insight</span>
+                        <span>Rule-Based Diagnostic</span>
                       </span>
                       <span className="text-xs font-mono font-medium text-ink">
-                        {(aiInsight.confidenceScore * 100).toFixed(0)}% Confidence
+                        Simulation evidence
                       </span>
                     </div>
                     <p className="text-xs text-ink leading-relaxed">
@@ -481,10 +481,10 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
                 <div className="p-4 rounded-xl bg-panel border border-line/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div>
                     <span className="font-medium text-ink text-xs block">
-                      Master Contactor Relay Control
+                      Eco-Off simulation
                     </span>
                     <span className="text-xs text-muted">
-                      Simulate automatic or manual emergency shutoff for this classroom.
+                      Change software appliance states and estimate a 30-minute avoided-energy window.
                     </span>
                   </div>
                   <button
@@ -499,7 +499,7 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
                 {/* Individual Circuit Load Toggles */}
                 <div className="space-y-2">
                   <h4 className="text-xs font-medium text-ink uppercase tracking-wider">
-                    Individual Circuit Breakers
+                    Simulated appliance switches
                   </h4>
                   {roomState.appliances.map((app, index) => {
                     const isPowered = app.isOn && !roomState.isEcoOff;
@@ -536,12 +536,12 @@ export const RoomDetailModal: React.FC<RoomDetailModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-3 border-t border-line/30 bg-panel/50 flex items-center justify-between text-xs">
+        <div className="px-6 py-3 border-t border-line/30 bg-panel/50 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
           <span className="text-muted font-medium">
-            Simulated edge telemetry & contactor relay control
+            Demo telemetry · software switching only
           </span>
 
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={onClose}
               className="px-3.5 py-1.5 rounded-lg bg-soft hover:bg-soft text-ink font-medium transition-colors"

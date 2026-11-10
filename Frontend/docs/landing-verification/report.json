@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-11-09T12:19:39.032Z",
+  "startedAt": "2026-11-09T14:54:46.318Z",
   "checks": [
     {
       "name": "Hero: real model, single demand-driven Canvas, native page scroll and constrained orbit",
@@ -68,5 +68,5 @@
     "renderer": "Chrome software WebGL; not a hardware FPS benchmark",
     "browser": "Chrome/156.0.8078.81"
   },
-  "completedAt": "2026-11-09T12:20:39.368Z"
+  "completedAt": "2026-11-09T14:55:54.791Z"
 }

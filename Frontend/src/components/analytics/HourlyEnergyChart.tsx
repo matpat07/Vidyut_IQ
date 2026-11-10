@@ -44,16 +44,16 @@ export const HourlyEnergyChart: React.FC = () => {
           <div className="flex items-center gap-2">
             
             <h3 className="font-medium text-sm text-ink">
-              Energy consumption
+            Power demand
             </h3>
           </div>
           <p className="text-xs text-muted mt-0.5">
-            Illustrative daily profile - actual vs. optimized
+            Illustrative profile · simulated baseline vs. modeled optimization
           </p>
         </div>
 
         <div className="flex items-center gap-2 text-xs font-mono bg-panel px-3 py-1.5 rounded-xl border border-line/30 self-start sm:self-auto">
-          <span className="text-muted">Live Load:</span>
+          <span className="text-muted">Simulated Power:</span>
           <span className="font-medium text-ink">
             {(impactSummary.currentTotalDrawWatts / 1000).toFixed(2)} kW
           </span>
@@ -97,7 +97,7 @@ export const HourlyEnergyChart: React.FC = () => {
             <Area
               type="monotone"
               dataKey="actualKw"
-              name="Actual (kW)"
+              name="Simulated Baseline (kW)"
               stroke="#CA2127"
               strokeWidth={2}
               fillOpacity={1}
@@ -106,7 +106,7 @@ export const HourlyEnergyChart: React.FC = () => {
             <Area
               type="monotone"
               dataKey="optimizedKw"
-              name="Optimized (kW)"
+              name="Modeled Optimized (kW)"
               stroke="#9B829A"
               strokeWidth={2}
               fillOpacity={1}

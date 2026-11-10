@@ -1,0 +1,49 @@
+{
+  "startedAt": "2026-11-09T15:17:59.356Z",
+  "checks": [
+    {
+      "name": "Deployment: known pages/assets load; unknown assets stay 404",
+      "passed": true
+    },
+    {
+      "name": "Demo context follows state and assumptions disclose preloaded savings",
+      "passed": true
+    },
+    {
+      "name": "Room diagnostics expose simulation evidence without confidence percentages",
+      "passed": true
+    },
+    {
+      "name": "Room Eco-Off preserves the 30-minute formula and records estimated savings",
+      "passed": true
+    },
+    {
+      "name": "Bulk Eco-Off uses nameplate estimates without updater side effects",
+      "passed": true
+    },
+    {
+      "name": "All built app URLs refresh and browser history remains functional",
+      "passed": true
+    },
+    {
+      "name": "Mobile room controls fit inside the dialog",
+      "passed": true
+    },
+    {
+      "name": "WebGL-disabled Radar opens a room list and leaves 6207 unavailable",
+      "passed": true
+    },
+    {
+      "name": "Root dev/preview commands use Frontend and forward CLI flags",
+      "passed": true
+    }
+  ],
+  "errors": [],
+  "environment": {
+    "node": "v24.19.0",
+    "host": "Local built-file server honoring _redirects; not cloud deployment",
+    "renderer": "Chrome software WebGL; not a GPU benchmark"
+  },
+  "completedAt": "2026-11-09T15:18:25.083Z",
+  "passed": true
+}

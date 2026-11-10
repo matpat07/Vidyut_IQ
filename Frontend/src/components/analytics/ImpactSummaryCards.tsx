@@ -31,7 +31,7 @@ export const ImpactSummaryCards: React.FC = () => {
             <span className="font-mono text-sm text-ink font-medium">kWh</span>
           </div>
           <p className="text-xs text-muted mt-1">
-            Measured reduction in simulated test sessions via controlled Eco-Off actions.
+            Modeled Eco-Off estimates, including demonstration seed values.
           </p>
         </motion.div>
 
@@ -58,7 +58,7 @@ export const ImpactSummaryCards: React.FC = () => {
             </span>
           </div>
           <p className="text-xs text-muted mt-1">
-            Direct operational electricity bill reduction (illustrative tariff).
+            Estimated avoided cost at the configured illustrative tariff.
           </p>
         </motion.div>
 
@@ -83,7 +83,7 @@ export const ImpactSummaryCards: React.FC = () => {
             <span className="font-mono text-sm text-ink font-medium">kg CO₂</span>
           </div>
           <p className="text-xs text-muted mt-1">
-            Based on CEA Indian grid emissions factor ({assumptions.carbonEmissionFactorKgPerKwh} kg/kWh).
+            Using the configured illustrative emissions factor ({assumptions.carbonEmissionFactorKgPerKwh} kg/kWh).
           </p>
         </motion.div>
 

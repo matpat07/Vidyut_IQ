@@ -37,9 +37,9 @@ export const HardwareCostingModal: React.FC<HardwareCostingModalProps> = ({ onCl
             <div className="flex items-center gap-2">
               
               <div>
-                <h2 className="text-base font-medium text-ink">Hardware BOM & Node Costing</h2>
+                <h2 className="text-base font-medium text-ink">Proposed Hardware BOM & Node Costing</h2>
                 <p className="text-xs text-muted">
-                  Per-room IoT sensing node specifications and safety architecture.
+                  Future scope: indicative IoT node specifications, not installed hardware.
                 </p>
               </div>
             </div>
@@ -108,7 +108,7 @@ export const HardwareCostingModal: React.FC<HardwareCostingModalProps> = ({ onCl
               {BOM_SUMMARY.safetyNote}
             </p>
             <p className="text-muted text-xs italic">
-              All switching circuits incorporate a manual physical override switch, ensuring uninterrupted facility operation during any software or network anomaly.
+              A future deployment would require a reviewed physical override and fail-safe design. These safeguards have not been built or validated in this software prototype.
             </p>
           </div>
 
@@ -116,7 +116,7 @@ export const HardwareCostingModal: React.FC<HardwareCostingModalProps> = ({ onCl
           <div className="bg-panel rounded-xl p-4 border border-line/30 space-y-2">
             <h4 className="font-medium text-ink text-xs flex items-center gap-2">
               
-              <span>Closed-Loop Hardware Flow</span>
+              <span>Proposed Hardware Flow · Future Scope</span>
             </h4>
             <div className="p-3 bg-panel rounded-lg border border-line/30 font-mono text-xs text-ink leading-relaxed overflow-x-auto">
               [Mains Supply] → [PZEM-004T Meter] → [ESP32 Node] → [Wi-Fi / MQTT Broker] → [Dashboard]
@@ -124,7 +124,7 @@ export const HardwareCostingModal: React.FC<HardwareCostingModalProps> = ({ onCl
               <span className="text-ink font-medium">↳ [Relay Driver] → [External Contactor] ← (Deterministic Safety Validation Layer)</span>
             </div>
             <p className="text-ink text-xs leading-relaxed">
-              The ESP32 continuously samples active power over UART. If the timetable marks the room empty and the LD2410 mmWave presence sensor detects zero occupants for a sustained duration, the deterministic safety engine authorises a staged switch-off.
+              Proposed pilot: an ESP32 would read the PZEM-004T over UART and combine occupancy signals with timetable rules. Meter ingestion, physical switching and safety interlocks are not implemented in this frontend.
             </p>
           </div>
 
@@ -132,7 +132,7 @@ export const HardwareCostingModal: React.FC<HardwareCostingModalProps> = ({ onCl
           <div>
             <h4 className="font-medium text-ink text-xs mb-3 flex items-center justify-between">
               <span>Indicative Bill of Materials (Per Node Breakdown)</span>
-              <span className="text-muted font-normal text-xs">Approximate market rates</span>
+              <span className="text-muted font-normal text-xs">Illustrative costs · unverified</span>
             </h4>
 
             <div className="overflow-x-auto border border-line/30 rounded-xl">

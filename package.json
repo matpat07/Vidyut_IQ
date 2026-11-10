@@ -4,9 +4,18 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
+    "postinstall": "npm --prefix Frontend ci --no-audit --no-fund",
+    "dev": "npm --prefix Frontend run dev --",
+    "build": "npm --prefix Frontend run build",
+    "preview": "npm --prefix Frontend run preview --",
+    "test": "npm --prefix Frontend test",
+    "typecheck": "npm --prefix Frontend exec tsc -- --noEmit",
+    "verify:landing": "npm --prefix Frontend run verify:landing",
+    "verify:radar": "npm --prefix Frontend run verify:radar",
+    "verify:submission": "npm --prefix Frontend run verify:submission",
+    "dev:legacy": "vite",
+    "build:legacy": "tsc && vite build",
+    "preview:legacy": "vite preview"
   },
   "dependencies": {
     "clsx": "^2.1.1",

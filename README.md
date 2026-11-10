@@ -1,8 +1,9 @@
-[VidyutIQ_README.md](https://github.com/user-attachments/files/34575092/VidyutIQ_README.md)
 <div align="center">
 
 # ⚡ VidyutIQ
 ### Campus Energy Intelligence & Interactive 3D Digital Twin
+
+**Active application: `Frontend/`. Root npm commands launch this application.**
 
 **See where electricity is used. Understand where it is wasted. Explore what can be saved.**
 
@@ -11,7 +12,7 @@
 [![Vite](https://img.shields.io/badge/Vite-6-CA2127?style=for-the-badge&logo=vite&logoColor=white)](https://vite.dev/)
 [![Three.js](https://img.shields.io/badge/Three.js-3D_Digital_Twin-161126?style=for-the-badge&logo=threedotjs&logoColor=white)](https://threejs.org/)
 [![React Three Fiber](https://img.shields.io/badge/React_Three_Fiber-8-E6D1E5?style=for-the-badge&logo=react&logoColor=161126)](https://r3f.docs.pmnd.rs/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-98829A?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3-9B829A?style=for-the-badge&logo=tailwindcss&logoColor=white)](https://tailwindcss.com/)
 [![Demo](https://img.shields.io/badge/Data_Mode-Simulation-CA2127?style=for-the-badge)](#-implementation-status--limitations)
 
 [**Explore Campus Radar**](#-campus-radar--the-3d-digital-twin) · [**Quick Start**](#-quick-start) · [**Architecture**](#-system-architecture) · [**Screenshots**](#-interface-preview) · [**Roadmap**](#-future-scope)
@@ -45,6 +46,12 @@ The problem is not simply monitoring watts. It is connecting **electricity consu
 ## 🖥️ Interface Preview
 
 The screenshots below are checked into the repository under `Frontend/docs/verification/`.
+
+### Landing page
+
+![VidyutIQ landing page](Frontend/docs/landing-verification/desktop-hero.png)
+
+The hero reuses the actual Building No. 6 model. The supplied campus aerial in Future Scope remains a reference image; the campus-wide WebGL environment is future work.
 
 ### Complete building → Five-floor explosion
 
@@ -91,7 +98,7 @@ The geometry is a **visual reconstruction from conceptual references**, not an e
 - Connected *simulation-node* and scheduled-occupancy summaries.
 - Current waste alerts and avoidable-power estimates.
 - Estimated energy savings (**kWh**) and cost impact (**₹**).
-- Actual-versus-optimized **illustrative** energy curve.
+- Simulated-baseline versus modeled-optimized **illustrative** power curve.
 - Department-level consumption visualizations and comparisons.
 - Adjustable model assumptions for tariffs, emissions, and projected impact.
 
@@ -109,7 +116,7 @@ The rule engine evaluates electricity demand against timetable occupancy and sim
 | **Scheduled but empty room** | Timetable and presence signals disagree | Surface a warning for review |
 | **Normal occupied session** | Consumption may be justified | Avoid treating all active loads as waste |
 
-Severity, reasons, and recommended actions are produced by the local rules. The separate **AI anomaly preview** is an explanatory simulation; it is **not a deployed, trained ML model or hosted LLM**.
+Severity, reasons, and recommended actions are produced by the local rules. The **rule-based diagnostic** explains existing evidence; it has no ML confidence percentage, trained model or hosted LLM.
 
 ### 🕒 4. Timetable-Aware Simulation
 
@@ -218,7 +225,7 @@ For implementation details, see the [Campus Radar developer guide](Frontend/docs
 | UI animation | **Framer Motion** | Panels, navigation, and transitions |
 | 3D renderer | **Three.js 0.170**, **React Three Fiber 8.18** | Building geometry, camera, picking, floor explosion |
 | Visualization | **Recharts** | Energy, comparison, and impact charts |
-| Icons | **Lucide React** | Consistent interface iconography |
+| Icons | **Lucide React** and local **Phosphor SVGs** | Workspace and landing iconography; Phosphor MIT notice is included |
 | Application state | **React Context** | Shared timetable, simulation, and room state |
 | Energy intelligence | **TypeScript rule engine** | Occupancy-aware wastage checks |
 | Data source (current) | **Deterministic frontend simulator** | Demonstrable room-level telemetry and scenarios |
@@ -268,11 +275,11 @@ Vidyut_IQ/
 ├── skills/                            # Optional coding/design skill references
 ├── SKILL.md                           # Spatial 3D interface guidance
 ├── src/                               # Preserved earlier frontend version
-├── package.json                       # Earlier root Vite app
+├── package.json                       # Commands delegated to Frontend; explicit legacy scripts remain
 └── README.md                          # Project overview (this file)
 ```
 
-> **Which application should I run?** Use **`Frontend/`** for the latest 3D Campus Radar experience. The root-level `src/` and `package.json` represent an earlier frontend implementation preserved in the repository.
+> **Which application should I run?** Root `npm run dev`, `build`, `preview` and `test` delegate to **`Frontend/`**. The earlier root `src/` is preserved; `npm run dev:legacy` opens it explicitly.
 
 ---
 
@@ -280,7 +287,7 @@ Vidyut_IQ/
 
 ### Prerequisites
 
-- A recent **Node.js LTS** release and npm.
+- **Node.js 24 LTS** and npm (the local verification environment and configured Netlify build use Node 24).
 - A modern browser with WebGL support for the 3D mode.
 - Git (optional if downloading the repository as ZIP).
 
@@ -288,7 +295,7 @@ Vidyut_IQ/
 
 ```bash
 git clone https://github.com/matpat07/Vidyut_IQ.git
-cd Vidyut_IQ/Frontend
+cd Vidyut_IQ
 ```
 
 ### 2. Install packages
@@ -296,6 +303,8 @@ cd Vidyut_IQ/Frontend
 ```bash
 npm ci
 ```
+
+Root installation runs `npm --prefix Frontend ci` as a postinstall step, using both committed lockfiles. `npm install` also runs this step. If lifecycle scripts are intentionally disabled, run `npm --prefix Frontend ci` explicitly before starting. Alternatively, `cd Frontend && npm ci && npm run dev` works independently.
 
 ### 3. Run the development server
 
@@ -311,7 +320,7 @@ Open the local address printed by Vite (commonly `http://localhost:5173`).
 
 ```bash
 npm test
-npm exec tsc -- --noEmit
+npm run typecheck
 npm run build
 npm run preview
 ```
@@ -320,6 +329,8 @@ npm run preview
 
 ```bash
 npm run verify:radar
+npm run verify:landing
+npm run verify:submission
 ```
 
 This last command requires compatible browser automation tooling and a Chrome executable already available in the environment. It does **not** install a browser. Setup and environment variables are documented in [`Frontend/docs/campus-radar-developer-guide.md`](Frontend/docs/campus-radar-developer-guide.md).
@@ -328,9 +339,11 @@ This last command requires compatible browser automation tooling and a Chrome ex
 
 ## 🎬 Recommended Demo Workflow
 
-The UI starts at an illustrative **Monday, 1:15 PM** state, placing the simulation in the scheduled lunch break so the wastage rules can be demonstrated quickly.
+The UI starts at an illustrative **Monday, 1:15 PM** state. The state-derived **Demo Scenario: Lunch Break** indicator explains the current timetable/occupancy context and updates when it changes. The opening **1.24 kWh** savings baseline and the separately labeled **0.53 kWh example audit entry** are preloaded demonstration values, not actions by the current visitor. New Eco-Off estimates accumulate on top.
 
-1. **Open Dashboard:** Identify simulated total demand, occupied rooms, active alerts, and projected savings.
+Use the [3–5 minute final demo guide](Frontend/docs/FINAL_DEMO_GUIDE.md) for exact clicks and fallback paths.
+
+1. **Open the landing page and Launch Dashboard:** Identify simulated demand, scheduled rooms, active alerts, and estimated savings.
 2. **Open Campus Radar:** Inspect the assembled PCCOE Building No. 6 in the 3D viewport.
 3. **Scroll to explode:** Separate the five floors while the navigation remains stationary.
 4. **Choose a floor:** Select Floor 1 or Floor 4 to inspect its distinct modeled room arrangement.
@@ -355,6 +368,8 @@ VidyutIQ models several related—but distinct—quantities:
 | Avoidable demand | **W / kW** | Rule-derived excess demand relative to modeled standby |
 | Estimated cost | **₹** | Modeled kWh × configured tariff (₹/kWh) |
 | Estimated emissions avoided | **kg CO₂** | Modeled kWh saved × configured grid factor |
+
+A single-room Eco-Off estimates `configured appliance watts × 0.5 hours / 1000` kWh, then applies the configured tariff and emissions factor. It does not measure saved energy. The seeded audit example is not a complete reconciliation of the opening savings baseline.
 
 The demo history integrates deterministic power samples over time. It is **modeled history**, not a historical sensor recording. Appliance breakdowns use configured device counts and rated wattages unless a real provider later supplies measured submeter data.
 
@@ -401,6 +416,9 @@ The current implementation includes a [configurable hardware BOM](Frontend/src/c
 
 ## 📚 Documentation
 
+- [Final judge demo guide](Frontend/docs/FINAL_DEMO_GUIDE.md)
+- [Submission verification and limitations](Frontend/docs/submission-verification/README.md)
+- [Landing implementation and provenance](Frontend/docs/landing-page.md)
 - [3D Campus Radar developer guide](Frontend/docs/campus-radar-developer-guide.md)
 - [Campus Radar browser verification and gallery](Frontend/docs/verification/README.md)
 - [Camera, accessibility and performance notes](Frontend/docs/campus-radar-phases-9-11.md)
@@ -409,6 +427,14 @@ The current implementation includes a [configurable hardware BOM](Frontend/src/c
 - [Hardware bill of materials](Frontend/src/config/hardwareBOM.ts)
 
 The historical `core.md/` documents discuss a broader classroom-availability platform and an aspirational backend. **Those plans are not a description of an implemented Next.js/Supabase backend in the current VidyutIQ frontend.**
+
+---
+
+## Deployment readiness
+
+Netlify configuration is checked in at [netlify.toml](netlify.toml). It builds in `Frontend/` and publishes `Frontend/dist/`. The [route rewrites](Frontend/public/_redirects) cover all eight workspace URLs and the existing dashboard aliases. They do not catch unknown asset URLs, which remain 404s.
+
+The repository is **configured for hosting, not deployed by this change**. There is no verified production URL. Follow [the manual deployment steps](Frontend/docs/DEPLOYMENT.md), then test `/app/radar` refresh and browser history on the actual site. Demo mode needs no energy backend or application secrets.
 
 ---
 

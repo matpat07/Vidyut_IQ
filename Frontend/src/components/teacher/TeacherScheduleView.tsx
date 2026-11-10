@@ -37,7 +37,7 @@ export const TeacherScheduleView: React.FC = () => {
               <div>
                 <h2 className="text-base font-medium text-ink">Faculty Schedule & Cancellation</h2>
                 <p className="text-xs text-muted">
-                  Release classroom & trigger automated contactor shutoff.
+                  Update simulated room availability and review powered appliances.
                 </p>
               </div>
             </div>
@@ -64,7 +64,7 @@ export const TeacherScheduleView: React.FC = () => {
         <div className="mt-4 p-3 rounded-xl bg-panel/70 border border-line/30 text-xs text-ink flex items-center gap-2.5">
           
           <p className="leading-relaxed">
-            Cancelling a lecture releases the room to students for study and triggers VidyutIQ contactor shutoff to eliminate waste.
+            Cancelling a lecture updates timetable-based room availability. Appliance states remain unchanged until you run an Eco-Off simulation.
           </p>
         </div>
       </div>

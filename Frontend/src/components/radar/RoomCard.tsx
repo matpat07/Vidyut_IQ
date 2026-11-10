@@ -130,7 +130,7 @@ export const RoomCard = React.forwardRef<HTMLDivElement, RoomCardProps>(({ data,
 
           <div>
             <span className="text-xs text-muted uppercase tracking-wider block font-medium">
-              Radar Presence
+              Simulated occupancy
             </span>
             <div className="flex items-center gap-1 mt-0.5">
               <span

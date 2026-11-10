@@ -31,7 +31,7 @@ export const SimulationWorkflowStepper: React.FC = () => {
       name: 'Telemetry',
       sub: 'Power Draw (W)',
       icon: Activity,
-      status: 'Live',
+      status: 'Simulated',
       statusColor: 'bg-panel text-ink border-line/30',
     },
     {
@@ -47,9 +47,9 @@ export const SimulationWorkflowStepper: React.FC = () => {
     {
       step: 4,
       name: 'Presence Check',
-      sub: 'mmWave Radar',
+      sub: 'Modeled occupancy',
       icon: Radio,
-      status: hasAlerts ? 'Verified Empty' : 'Standby',
+      status: hasAlerts ? 'Simulated signal' : 'Standby',
       statusColor: hasAlerts
         ? 'bg-soft text-ink border-line/30 font-medium'
         : 'bg-soft text-ink border-line/30',
@@ -57,7 +57,7 @@ export const SimulationWorkflowStepper: React.FC = () => {
     {
       step: 5,
       name: 'Shutdown',
-      sub: 'Contactor Trip',
+      sub: 'Software Eco-Off',
       icon: Power,
       status: hasRemediation ? 'Remediated' : 'Ready',
       statusColor: hasRemediation
@@ -67,9 +67,9 @@ export const SimulationWorkflowStepper: React.FC = () => {
     {
       step: 6,
       name: 'Savings',
-      sub: 'Logged & Verified',
+      sub: 'Estimated & Logged',
       icon: Leaf,
-      status: hasRemediation ? 'Verified' : 'Projected',
+      status: hasRemediation ? 'Estimated' : 'Projected',
       statusColor: hasRemediation
         ? 'bg-soft text-ink border-line/30 font-medium'
         : 'bg-soft text-ink border-line/30',
@@ -82,11 +82,11 @@ export const SimulationWorkflowStepper: React.FC = () => {
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-accent " />
           <h3 className="font-medium text-xs uppercase tracking-wider text-muted">
-            Automated Waste Mitigation Pipeline
+            Simulated Waste Mitigation Pipeline
           </h3>
         </div>
         <span className="text-xs text-muted font-medium hidden sm:inline">
-          Closed-Loop Software & Sensor Architecture
+          Software simulation · hardware proposed
         </span>
       </div>
 

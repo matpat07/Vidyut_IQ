@@ -60,7 +60,7 @@ export const AlertsTriageView: React.FC<AlertsTriageViewProps> = ({ onInspectRoo
                   Energy Wastage Alerts
                 </h2>
                 <p className="text-xs text-muted mt-0.5">
-                  Real-time anomalies from timetable, radar, and power meter correlation.
+                  Simulated anomaly alerts from timetable and modeled occupancy/power rules.
                 </p>
               </div>
             </div>
@@ -168,7 +168,7 @@ export const AlertsTriageView: React.FC<AlertsTriageViewProps> = ({ onInspectRoo
                       {isPresenceChecked && (
                         <div className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded bg-panel text-ink border border-line/30 text-xs font-semibold">
                           
-                          <span>Radar scan confirmed: 0 occupants (Room vacant)</span>
+                          <span>Simulated occupancy signal: {roomData?.telemetry.simulatedPirPresence ? `${roomData.telemetry.simulatedOccupantCount} modeled occupants` : 'no presence'}</span>
                         </div>
                       )}
                     </div>
@@ -194,7 +194,7 @@ export const AlertsTriageView: React.FC<AlertsTriageViewProps> = ({ onInspectRoo
                   <div className="flex items-center gap-2 shrink-0">
                     <button
                       onClick={() => handleCheckPresence(alert.roomId)}
-                      title="Run radar mmWave presence check"
+                      title="Inspect the current simulated occupancy signal"
                       className={`px-3 py-2 rounded-lg text-xs font-medium transition-colors flex items-center gap-1.5 border ${
                         isPresenceChecked
                           ? 'bg-panel text-ink border-line/30'
@@ -202,12 +202,12 @@ export const AlertsTriageView: React.FC<AlertsTriageViewProps> = ({ onInspectRoo
                       }`}
                     >
                       
-                      <span>{isPresenceChecked ? 'Verified' : 'Check Presence'}</span>
+                      <span>{isPresenceChecked ? 'Signal viewed' : 'Check Presence'}</span>
                     </button>
 
                     <button
                       onClick={() => simulateEcoOff(alert.roomId)}
-                      title="Simulate immediate contactor shutdown"
+                      title="Simulate switching off configured appliances"
                       className="px-3 py-2 rounded-lg bg-danger hover:bg-danger text-on-accent text-xs font-medium transition-colors flex items-center gap-1.5 shadow-xs"
                     >
                       
@@ -233,7 +233,7 @@ export const AlertsTriageView: React.FC<AlertsTriageViewProps> = ({ onInspectRoo
         <div className="text-center py-16 card-base space-y-3">
           
           <div>
-            <h3 className="text-base font-medium text-ink">All Campus Circuits Are Optimal</h3>
+            <h3 className="text-base font-medium text-ink">No active simulated waste alerts</h3>
             <p className="text-xs text-muted mt-1 max-w-md mx-auto">
               No active energy waste detected at {timeString}. To test how the triage works, select a scenario like <strong>Teacher Cancel</strong> or <strong>Lunch Break</strong> from the simulation bar above.
             </p>

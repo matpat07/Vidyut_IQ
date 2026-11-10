@@ -3,6 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useSimulation } from '../../context/SimulationContext';
 import { MACRO_CAMPUS_PROJECTIONS } from '../../config/assumptions';
+import {DEMO_SEED_SAVINGS_KWH} from '../../config/demoSeed';
 import { X, Sliders, IndianRupee, CloudRain, Calendar, Clock, RotateCcw } from 'lucide-react';
 
 interface AssumptionsModalProps {
@@ -67,6 +68,7 @@ export const AssumptionsModal: React.FC<AssumptionsModalProps> = ({ onClose }) =
 
         {/* Body */}
         <div className="p-5 space-y-4 text-xs">
+          <p className="p-3 rounded-xl border border-line/30 text-muted leading-relaxed">Demonstration seed: the opening {DEMO_SEED_SAVINGS_KWH.toFixed(2)} kWh total and the preloaded example audit entry illustrate the interface; they were not performed by you. New Eco-Off actions add a modeled 30-minute avoided-energy estimate. The hourly chart is an illustrative profile, separate from the current simulated demand.</p>
           
           {/* Tariff Input */}
           <div className="bg-panel p-4 rounded-xl border border-line/30 space-y-2">
@@ -114,7 +116,7 @@ export const AssumptionsModal: React.FC<AssumptionsModalProps> = ({ onClose }) =
               className="w-full accent-accent cursor-pointer h-1.5 bg-soft rounded-lg appearance-none"
             />
             <p className="text-xs text-muted">
-              Central Electricity Authority (CEA) official baseline CO₂ emissions factor for the Indian national grid.
+              Illustrative grid factor for the model. Confirm a suitable published factor before reporting measured impact.
             </p>
           </div>
 

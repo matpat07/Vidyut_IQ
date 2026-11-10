@@ -10,6 +10,7 @@
     "test": "node --test tests/*.test.mjs",
     "verify:radar": "node scripts/verify-campus-radar.mjs",
     "verify:landing": "node scripts/verify-landing.mjs",
+    "verify:submission": "node scripts/verify-submission.mjs",
     "capture:landing": "node scripts/capture-landing.mjs"
   },
   "dependencies": {

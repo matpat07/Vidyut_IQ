@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-11-09T11:22:04.963Z",
+  "startedAt": "2026-11-09T14:54:44.382Z",
   "checks": [
     {
       "name": "A: complete exterior, five levels, three distinct entrances and two lawns",
@@ -57,13 +57,13 @@
     "canopies": 2,
     "lawns": 2,
     "bounds": {
-      "left": 52.13752313149045,
-      "right": 921.559500801969,
-      "top": 27.32411704599245,
-      "bottom": 502.62936926332077
+      "left": 72.69528850173246,
+      "right": 899.7494946715177,
+      "top": 27.162129616340017,
+      "bottom": 479.3052984768849
     },
     "width": 1202,
-    "height": 588.5,
+    "height": 564.5,
     "calls": 115,
     "triangles": 36464
   },
@@ -95,5 +95,5 @@
     }
   ],
   "passed": true,
-  "finishedAt": "2026-11-09T11:22:36.837Z"
+  "finishedAt": "2026-11-09T14:55:25.084Z"
 }

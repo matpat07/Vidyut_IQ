@@ -1,0 +1,11 @@
+# Rewrite only known client routes; missing assets must remain 404 responses.
+/app/dashboard  /index.html  200
+/app/radar      /index.html  200
+/app/analytics  /index.html  200
+/app/alerts     /index.html  200
+/app/audit      /index.html  200
+/app/faculty    /index.html  200
+/app/rooms      /index.html  200
+/app/settings   /index.html  200
+/app            /index.html  200
+/dashboard      /index.html  200

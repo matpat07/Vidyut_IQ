@@ -27,6 +27,6 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentView, onSelectView, isO
  <button className="mobile-close" onClick={onCloseMobile}>Close menu</button>
  <nav aria-label="Main navigation">{groups.map(group => <div className="nav-group" key={group.label}><p className="eyebrow">{group.label}</p>
  {group.items.map(([id, label]) => <button key={id} aria-current={currentView === id ? 'page' : undefined} onClick={() => { onSelectView(id); onCloseMobile(); }}><span>{label}</span>{id === 'ALERTS' && activeAlerts.length > 0 ? <small>{activeAlerts.length}</small> : currentView === id ? <span aria-hidden="true">↗</span> : null}</button>)}</div>)}</nav>
- <div className="sidebar-status"><span className="status-dot"/> Simulation online<p>{roomDataList.length} connected room nodes</p></div>
+ <div className="sidebar-status"><span className="status-dot"/> Simulation mode<p>{roomDataList.length} simulated room records</p></div>
  </aside></>;
 };

@@ -17,6 +17,6 @@ export function DigitalTwinShowcase(){
   </div>
   <div className="twin-bottom"><div><p className="landing-eyebrow">0{stage+1} / DIGITAL TWIN</p><h3>{stages[stage][1]}</h3></div><AppLink view="RADAR" className="landing-button">Enter Campus Radar <span className="button-icon"><LandingIcon name="arrow-up-right" size={18}/></span></AppLink></div>
   <div className="twin-stage-buttons" role="group" aria-label="Digital twin preview stages">{stages.map(([label],index)=><button key={label} aria-pressed={stage===index} onClick={()=>setStage(index)}><span>0{index+1}</span><LandingIcon name={stageIcons[index]} size={18}/>{label}</button>)}</div>
-  <p className="twin-capture-note">Verified renders from the working model. Launch Campus Radar for live interaction with the simulation.</p>
+  <p className="twin-capture-note">Verified renders from the working model. Launch Campus Radar to interact with the simulation.</p>
  </div></section>;
 }

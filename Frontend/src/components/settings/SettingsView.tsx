@@ -98,7 +98,7 @@ export const SettingsView: React.FC = () => {
               className="w-full accent-accent cursor-pointer h-1.5 bg-soft rounded-lg appearance-none"
             />
             <p className="text-xs text-muted">
-              Commercial / institutional rate for urban grid supply (typical ₹8.50 - ₹10.50/kWh).
+              Illustrative tariff range; use a verified local rate before reporting financial impact.
             </p>
           </div>
 
@@ -125,7 +125,7 @@ export const SettingsView: React.FC = () => {
               className="w-full accent-accent cursor-pointer h-1.5 bg-soft rounded-lg appearance-none"
             />
             <p className="text-xs text-muted">
-              Central Electricity Authority (CEA) official baseline CO₂ emissions factor for the Indian national grid.
+              Illustrative grid factor for this model; confirm a suitable published factor before reporting measured impact.
             </p>
           </div>
 
@@ -229,11 +229,11 @@ export const SettingsView: React.FC = () => {
             <div className="flex items-center gap-2">
               
               <h3 className="font-medium text-sm text-ink">
-                IoT Hardware BOM (Per-Room Node)
+                Proposed IoT Hardware BOM · Future Scope
               </h3>
             </div>
             <p className="text-xs text-muted mt-0.5">
-              Split-core CT clamp + 24GHz mmWave radar retrofit.
+              Indicative ESP32, PZEM-004T and occupancy-sensing pilot components; not installed.
             </p>
           </div>
 
@@ -270,7 +270,7 @@ export const SettingsView: React.FC = () => {
         <div className="p-3 rounded-xl bg-panel border border-line/30 text-xs text-ink flex items-start gap-2">
           
           <p className="text-xs leading-relaxed">
-            <strong>Electrical Safety:</strong> Low-voltage ESP32 drives optocoupled relays to actuate external industrial contactors.
+            <strong>Electrical Safety:</strong> Future hardware proposal: a low-voltage ESP32 would interface with optocoupled relays and rated external contactors. No electrical hardware is connected.
           </p>
         </div>
       </div>

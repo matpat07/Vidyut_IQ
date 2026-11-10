@@ -28,7 +28,7 @@ Icons use a small local subset of official Phosphor regular SVG paths under `src
 
 `/app` and `/dashboard` also open Dashboard. Unrecognized paths display the landing page. Workspace role changes still open the corresponding portal; mounting a direct URL does not override that URL. The sidebar wordmark returns home. Ordinary navigation preserves the running simulation; a full document reload retains the application's existing initialization behavior. The workspace theme preference remains persisted as before. The landing surface always uses midnight violet without changing that preference.
 
-Vite dev and preview support direct requests to these paths. A production static host needs an SPA fallback to `index.html`, including `/app/*`.
+Vite dev and preview support direct requests to these paths. The configured production rewrites cover known app routes explicitly, preserving 404s for unknown assets. The client router's landing fallback for unrecognized paths does not imply that the production server rewrites arbitrary paths. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
 ## Page composition
 

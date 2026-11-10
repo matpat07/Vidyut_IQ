@@ -16,7 +16,7 @@ The [machine-readable report](report.json) records the run time, browser, checks
 
 Additional browser checks cover five responsive sizes, reduced motion, the equivalent searchable list and aliases, removal of Canvas/Fiber roots when leaving 3D, re-entry with expected resource counts, geometry/camera reuse during exploration and idle rendering. The existing dashboard KPI contents remain unchanged; Campus Insights, Active Alerts and Room Monitoring shortcuts navigate correctly; the original room modal still opens/closes.
 
-The 31-test suite includes a new pointer-hit regression. The explicit TypeScript check and production build pass with the existing large-chunk advisories.
+The current 39-test suite includes the pointer-hit regression and submission-hardening coverage. The explicit TypeScript check and production build pass with the existing large-chunk advisories. See the [submission verification](../submission-verification/README.md) for the final terminology, entry-point and hosting checks.
 
 The final direct-polygon test found and fixed a click/orbit ordering issue: orbit ownership began before Fiber recorded pointer-down hits, so a canvas click could lose its initial room candidate. Raycasting now preserves candidates during an orbit gesture, while room selection remains locked until release and still rejects drags. Cinematic transitions continue to block raycasting and selection. The actual canvas hover/click is exercised by milestone D, separately from DOM-label selection.
 

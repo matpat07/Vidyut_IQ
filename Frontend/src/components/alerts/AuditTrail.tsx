@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useSimulation } from '../../context/SimulationContext';
 import { History, Trash2, CheckCircle2, ShieldCheck, Download } from 'lucide-react';
+import {DEMO_SEED_AUDIT_ID} from '../../config/demoSeed';
 
 export const AuditTrail: React.FC = () => {
   const { auditTrail, clearAuditTrail } = useSimulation();
@@ -19,7 +20,7 @@ export const AuditTrail: React.FC = () => {
             </h3>
           </div>
           <p className="text-xs text-muted mt-0.5">
-            Log of relay interventions, power cut, and estimated savings.
+            Software Eco-Off actions and estimated savings. Preloaded examples are marked as demo seeds.
           </p>
         </div>
 
@@ -43,7 +44,7 @@ export const AuditTrail: React.FC = () => {
                 <th className="px-4 py-3 font-medium">Time</th>
                 <th className="px-4 py-3 font-medium">Target Room</th>
                 <th className="px-4 py-3 font-medium">Remediated Action</th>
-                <th className="px-4 py-3 font-medium">Watts Cut</th>
+                <th className="px-4 py-3 font-medium">Modeled W removed</th>
                 <th className="px-4 py-3 font-medium">Est. kWh Saved</th>
                 <th className="px-4 py-3 font-medium">Est. INR Saved</th>
                 <th className="px-4 py-3 font-medium">Initiated By</th>
@@ -69,6 +70,7 @@ export const AuditTrail: React.FC = () => {
                     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-xs font-medium bg-panel text-ink border border-line/30">
                       
                       <span>{record.action}</span>
+                      {record.id===DEMO_SEED_AUDIT_ID&&<small className="ml-2 text-muted">Demo seed · preloaded</small>}
                     </span>
                   </td>
                   <td className="px-4 py-3 font-mono font-medium text-ink whitespace-nowrap">
@@ -95,7 +97,7 @@ export const AuditTrail: React.FC = () => {
           
           <p className="font-medium text-ink">No remediation actions recorded yet.</p>
           <p className="text-xs text-muted">
-            Trigger an Eco-Off contactor cutoff from the Campus Radar or click the 1-Click Remediation button.
+            Run an Eco-Off simulation from the Campus Radar or click the 1-Click Remediation button.
           </p>
         </div>
       )}

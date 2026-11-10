@@ -13,6 +13,7 @@ import {
 } from 'lucide-react';
 import { DayOfWeek } from '../../types/timetable.types';
 import { motion, AnimatePresence } from 'framer-motion';
+import {getDemoScenario} from '../../services/demoContext';
 
 export const SimulationBar: React.FC = () => {
   const {
@@ -27,9 +28,11 @@ export const SimulationBar: React.FC = () => {
     clockSpeedMultiplier,
     setClockSpeedMultiplier,
     loadPresetScenario,
+    roomDataList,
   } = useSimulation();
 
   const [isScenarioMenuOpen, setIsScenarioMenuOpen] = useState(false);
+  const demoScenario=getDemoScenario(day,simulationMinutes,roomDataList,activeSlot);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const days: DayOfWeek[] = ['MON', 'TUE', 'WED', 'THU', 'FRI'];
@@ -83,7 +86,7 @@ export const SimulationBar: React.FC = () => {
     {
       id: 'NORMAL_CLASS',
       label: 'Normal In-Session Class',
-      sublabel: '9:30 AM: Full attendance, optimal load',
+      sublabel: '9:30 AM: Scheduled classes and modeled occupancy',
       icon: CheckCircle2,
       colorClass: 'text-ink bg-panel',
     },
@@ -91,6 +94,7 @@ export const SimulationBar: React.FC = () => {
 
   return (
     <div className="bg-panel/80 backdrop-blur-sm border-b border-line/30 px-4 sm:px-6 lg:px-8 py-3">
+      {demoScenario&&<details className="simulation-context text-xs text-muted mb-2"><summary className="cursor-pointer w-fit">Demo Scenario: {demoScenario.label}</summary><p className="mt-1 max-w-3xl leading-relaxed">{demoScenario.description} All readings and switching actions are simulated.</p></details>}
       <div className="flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-4">
         
         {/* Left: Time Slider, Play/Pause, & Day Pills */}

@@ -8,6 +8,7 @@ import { evaluateWastage } from '../services/wastageEngine';
 import { SimulatedTelemetry, WastageAlert, AuditRecord } from '../types/telemetry.types';
 import { ConfigurableAssumptions, EstimatedImpactSummary } from '../types/impact.types';
 import { DEFAULT_ASSUMPTIONS, MACRO_CAMPUS_PROJECTIONS } from '../config/assumptions';
+import {DEMO_SEED_SAVINGS_KWH,DEMO_SEED_AUDIT_ID} from '../config/demoSeed';
 
 export type UserRole = 'ADMIN' | 'TEACHER' | 'STUDENT';
 
@@ -84,7 +85,7 @@ export const SimulationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   // Audit trail
   const [auditTrail, setAuditTrail] = useState<AuditRecord[]>([
     {
-      id: 'audit-seed-1',
+      id: DEMO_SEED_AUDIT_ID,
       timestamp: '11:12 AM',
       roomId: '6103CR',
       roomName: 'Classroom 6103',
@@ -93,12 +94,12 @@ export const SimulationProvider: React.FC<{ children: React.ReactNode }> = ({ ch
       estimatedKwhSaved: 0.53,
       estimatedCostSavedInr: 4.77,
       estimatedCo2AvoidedKg: 0.43,
-      initiatedBy: 'Auto-Relay Simulation',
+      initiatedBy: 'Demonstration seed (preloaded)',
     }
   ]);
 
   // Accumulated savings counters
-  const [accumulatedKwhSaved, setAccumulatedKwhSaved] = useState<number>(1.24);
+  const [accumulatedKwhSaved, setAccumulatedKwhSaved] = useState<number>(DEMO_SEED_SAVINGS_KWH);
 
   // Time-clock ticker
   useEffect(() => {

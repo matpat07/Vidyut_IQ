@@ -27,23 +27,23 @@ export function evaluateWastage(
   if (expectedStatus === 'BREAK' && isPowerDrawAboveStandby) {
     isWastingPower = true;
     severity = excessWatts > 2000 ? 'CRITICAL' : excessWatts > 800 ? 'HIGH' : 'MEDIUM';
-    reason = `Campus-wide Break active, but ${excessWatts}W active load detected with zero PIR presence.`;
-    recommendedAction = 'Execute Eco-Off contactor cutoff to prevent break-hour air conditioning waste.';
+    reason = `Scheduled Break: ${excessWatts}W modeled excess demand with simulated occupancy ${rawTelemetry.simulatedPirPresence ? 'present' : 'absent'}.`;
+    recommendedAction = 'Review the modeled appliances and simulate Eco-Off during the break.';
   }
   // Condition 2: Cancelled Lecture with lights/AC left ON
   else if (expectedStatus === 'CANCELLED' && isPowerDrawAboveStandby) {
     isWastingPower = true;
     severity = excessWatts > 1500 ? 'CRITICAL' : 'HIGH';
-    reason = `Lecture reported CANCELLED by faculty, but room circuits remain active (${excessWatts}W draw).`;
-    recommendedAction = '1-Click Relay Eco-Off: Cut power and release room to student study pool.';
+    reason = `Lecture marked CANCELLED in the simulation, while modeled appliances draw ${excessWatts}W above standby.`;
+    recommendedAction = 'Review simulated room availability and run Eco-Off if the room is unused.';
   }
   // Condition 3: Unscheduled Vacant Room with Ghost Load (e.g. empty lab with PCs/AC on)
   else if (expectedStatus === 'VACANT' && isPowerDrawAboveStandby) {
     if (!rawTelemetry.simulatedPirPresence) {
       isWastingPower = true;
       severity = excessWatts > 2500 ? 'CRITICAL' : excessWatts > 1000 ? 'HIGH' : 'MEDIUM';
-      reason = `No class scheduled in timetable and zero mmWave presence verified. Ghost load: ${excessWatts}W.`;
-      recommendedAction = 'Stage contactor shutdown: cut secondary lighting and air conditioning.';
+      reason = `No class scheduled; simulated occupancy is absent with ${excessWatts}W modeled excess demand.`;
+      recommendedAction = 'Inspect the modeled appliance states and simulate switching off unused loads.';
     } else {
       // Unscheduled but student presence detected (e.g. self-study)
       severity = 'OPTIMAL';
@@ -54,8 +54,8 @@ export function evaluateWastage(
   else if (expectedStatus === 'SCHEDULED' && !rawTelemetry.simulatedPirPresence && isPowerDrawAboveStandby) {
     isWastingPower = true;
     severity = 'HIGH';
-    reason = `Timetable indicates scheduled lecture, but PIR & mmWave radar detect zero occupants.`;
-    recommendedAction = 'Send push notification to faculty or trigger safety-vetoed staged shutdown.';
+    reason = 'Timetable indicates a scheduled lecture, but the simulated occupancy signal indicates no presence.';
+    recommendedAction = 'Review the timetable and simulated occupancy before trying an Eco-Off scenario.';
   }
   // Condition 5: Normal Scheduled Usage with Occupants
   else if (expectedStatus === 'SCHEDULED') {
