@@ -20,7 +20,7 @@ function FloorOutline() {
   return <InstancedBoxes parts={parts} role="highlight" />;
 }
 
-export function BuildingModel({ controller, selectedFloor, focus, ...interaction }: { controller: ExplosionController; selectedFloor: number | null; focus: FloorFocus } & RoomInteraction) {
+export function BuildingModel({ controller, selectedFloor, focus,presentation='full', ...interaction }: { controller: ExplosionController; selectedFloor: number | null; focus: FloorFocus;presentation?:'full'|'exterior' } & RoomInteraction) {
   const root = useRef<Group>(null);
   const floors = useRef<(Group | null)[]>([]);
   const outlines = useRef<(Group | null)[]>([]);
@@ -45,7 +45,7 @@ export function BuildingModel({ controller, selectedFloor, focus, ...interaction
     });
     surfaces.current = result;
     return () => { surfaces.current = []; };
-  }, []);
+  }, [presentation]);
   useFrame(() => {
     const pose = explosionPose(controller.current, BUILDING.floorHeight);
     floors.current.forEach((floor, index) => { if (floor) {
@@ -75,8 +75,8 @@ export function BuildingModel({ controller, selectedFloor, focus, ...interaction
       <FloorPlate level={index} />
       {BUILDING.towerX.map(x => <SideEntranceLevel key={x} x={x} level={index} />)}
       <ServiceCores />
-      <FloorRooms floor={index + 1} focus={focus} {...interaction} />
-      <group name="floor-selection-outline" visible={false} ref={node => { outlines.current[index] = node; }}><FloorOutline /></group>
+      {presentation==='full'&&<FloorRooms floor={index + 1} focus={focus} {...interaction} />}
+      {presentation==='full'&&<group name="floor-selection-outline" visible={false} ref={node => { outlines.current[index] = node; }}><FloorOutline /></group>}
     </group>)}
     <group name="roof" ref={roof} position={[0, BUILDING.floors * BUILDING.floorHeight, 0]}><Roof /></group>
     <group name="entrance-cutaway" ref={accessories} userData={{ explosionRole: 'accessory' }}><CentralEntrance /></group>

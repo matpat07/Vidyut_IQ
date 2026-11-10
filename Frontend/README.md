@@ -8,6 +8,8 @@ npm run dev
 
 Open the local URL printed by Vite, normally `http://localhost:5173`. In PowerShell, use `npm.cmd` if the execution policy blocks `npm.ps1`.
 
+The public landing page opens at `/`. Launch Dashboard opens `/app/dashboard`; Campus Radar opens `/app/radar`. All eight existing workspace views support direct URLs and browser history. Production hosting must serve `index.html` for `/app/*` requests, as Vite's dev and preview servers do.
+
 ```sh
 npm test
 npm exec tsc -- --noEmit
@@ -20,5 +22,9 @@ Campus Radar uses the existing simulator in explicitly labeled Demo mode. Connec
 - [Developer guide: geometry, rooms, layouts and energy mappings](docs/campus-radar-developer-guide.md)
 - [Final milestone verification and screenshots](docs/verification/README.md)
 - [Camera, accessibility and performance notes](docs/campus-radar-phases-9-11.md)
+- [Landing page: implementation, routes and asset provenance](docs/landing-page.md)
+- [Landing browser verification and screenshots](docs/landing-verification/README.md)
 
 The optional `npm run verify:radar` browser audit reuses an existing Puppeteer-compatible tool and installed Chrome. See the developer guide for its environment variables. It does not install dependencies and is separate from the regular test/build commands.
+
+`npm run verify:landing` runs the corresponding landing audit with the same browser environment variables. `npm run capture:landing` regenerates previews from the actual project UI and building model. Neither command installs browser tooling.

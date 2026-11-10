@@ -1,0 +1,7 @@
+import React from 'react';
+import {AppLink,Reveal,SectionIntro} from './ui';
+import {LandingIcon} from './icons/LandingIcon';
+export function SolutionShowcase(){return <Reveal className="landing-section solution-section"><div className="landing-container"><div className="section-split"><SectionIntro eyebrow="OUR SOLUTION" title={<>One campus.<br/>Complete energy intelligence.</>}>VidyutIQ brings timetable awareness, modeled energy telemetry, anomaly detection, and actionable room-level insights into one integrated platform.</SectionIntro><AppLink view="DASHBOARD" className="landing-text-link">See the workspace <LandingIcon name="arrow-up-right" size={17}/></AppLink></div>
+ <div className="solution-capabilities"><span><LandingIcon name="gauge"/>Understand demand</span><span><LandingIcon name="scan"/>Find avoidable consumption</span><span><LandingIcon name="leaf"/>Explore the impact</span></div>
+ <AppLink view="DASHBOARD" className="dashboard-preview"><div className="preview-topline"><span><i/>VIDYUTIQ / ENERGY WORKSPACE</span><span>SIMULATION PREVIEW ↗</span></div><img src="/landing/dashboard.png" width="1440" height="1000" loading="lazy" alt="Verified capture of the VidyutIQ dashboard with its energy graph, KPI cards and consumption distribution"/></AppLink>
+ <div className="solution-footnote"><span>ONE WORKSPACE. CONNECTED DECISIONS.</span><p>Actual project interface. Readings and savings shown are simulated or estimated.</p></div></div></Reveal>;}

@@ -1,0 +1,72 @@
+{
+  "startedAt": "2026-11-09T12:19:39.032Z",
+  "checks": [
+    {
+      "name": "Hero: real model, single demand-driven Canvas, native page scroll and constrained orbit",
+      "passed": true
+    },
+    {
+      "name": "Problem carousel: autoplay, hover/focus pause, arrows, pointer drag and non-focusable clones",
+      "passed": true
+    },
+    {
+      "name": "Feature gallery: slow autoplay, manual override, arrows, indicators and mouse drag",
+      "passed": true
+    },
+    {
+      "name": "Process controls: manual selection persists and hands back to deliberate scrolling",
+      "passed": true
+    },
+    {
+      "name": "Twin preview: normal scroll drives five stages; manual stage buttons work",
+      "passed": true
+    },
+    {
+      "name": "Campus reference: full uncropped image, conceptual callouts, modal focus/Escape",
+      "passed": true
+    },
+    {
+      "name": "Public/app navigation: CTA, sidebar, history, refresh and all eight direct views",
+      "passed": true
+    },
+    {
+      "name": "Shared simulator and theme survive a landing/workspace round trip",
+      "passed": true
+    },
+    {
+      "name": "Responsive: desktop, tablet, mobile, menu keyboard, touch carousel and fixed palette",
+      "passed": true
+    },
+    {
+      "name": "Reduced motion: static hero, manual previews, no carousel autoplay",
+      "passed": true
+    },
+    {
+      "name": "WebGL unavailable: usable architectural fallback and working app CTA",
+      "passed": true
+    }
+  ],
+  "screenshots": [
+    "desktop-hero.png",
+    "desktop-problem.png",
+    "desktop-features.png",
+    "desktop-twin.png",
+    "desktop-campus.png",
+    "campus-full-image.png",
+    "responsive-768.png",
+    "responsive-390.png",
+    "responsive-320.png",
+    "mobile-features.png",
+    "reduced-motion.png",
+    "webgl-fallback.png"
+  ],
+  "errors": [],
+  "expectedDevelopmentNotices": [
+    "You have Reduced Motion enabled on your device. Animations may not appear as expected.. For more information and steps for solving, visit https://motion.dev/troubleshooting/reduced-motion-disabled"
+  ],
+  "environment": {
+    "renderer": "Chrome software WebGL; not a hardware FPS benchmark",
+    "browser": "Chrome/156.0.8078.81"
+  },
+  "completedAt": "2026-11-09T12:20:39.368Z"
+}
